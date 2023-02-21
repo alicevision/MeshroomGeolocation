@@ -12,7 +12,15 @@ pip install -r requirements.txt
 ```
 Custom nodes can be added to Meshroom by setting the environment variable `MESHROOM_NODES_PATH`.
 
+Here `MESHROOM_NODES_PATH = path/to/MeshroomGeolocation`.
+
 All the nodes will be in Geolocalisation category in Meshroom UI.
+
+Custom pipelines can be added to Meshroom by setting the environment variable `MESHROOM_PIPELINE_TEMPLATES_PATH`.
+
+Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
+
+All the pipelines will be available in Pipelines category in Meshroom UI.
 
 ## Features
 All nodes created by our team enable the following features :
@@ -25,7 +33,7 @@ All nodes created by our team enable the following features :
 - **Mesh3D** : After treatment, lidar file or ASCII file generates a 3D mesh.
 - **North** : As north is not indicated on the maps generated, this node places it as a cone.
 - **WeatherHDRI** : As sometimes weather information is needed, HDRI of the current weather of the dataset is downloaded.
-- **Sun** : The position of the sun according when the dataset was taken is calculated with thus node and represented as a big yellow sphere.
+- **Sun** : The position of the sun according when the dataset was taken is calculated with this node and represented as a big yellow sphere.
 
 ## Feedback
 Do not hesitate to contact us or to give us some feedback.
