@@ -20,7 +20,7 @@ Custom pipelines can be added to Meshroom by setting the environment variable `M
 
 Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
 
-All the pipelines will be available in Pipelines category in Meshroom UI.
+All the pipelines will be available in Pipelines category in Meshroom UI. You can learn more about them [here](#pipelines).
 
 ## Features
 All nodes created by our team enable the following features :
@@ -34,6 +34,38 @@ All nodes created by our team enable the following features :
 - **North** : As north is not indicated on the maps generated, this node places it as a cone.
 - **WeatherHDRI** : As sometimes weather information is needed, HDRI of the current weather of the dataset is downloaded.
 - **Sun** : The position of the sun according when the dataset was taken is calculated with this node and represented as a big yellow sphere.
+
+## Pipelines
+Some pipelines are already existing to make the use of them easier.
+Here are screenshots of them :
+- Named **Generate Sun**, this pipeline can calculate the position of the sun and create a sphere representing it.
+
+![Sun pipeline](./external_files/sun_pipeline.png)
+
+- **Generate North** permits to know where the north is.
+
+![North pipeline](./external_files/north_pipeline.png)
+
+- **Generate Map** is all about getting the 2d map you want, with the layers desired.
+
+![Map 2d pipeline](./external_files/map2d_pipeline.png)
+
+- **Generate Weather H D R I** is also a simple node with an HDRI downloaded for the weather during the dataset.
+
+![Weather pipeline](./external_files/weather_pipeline.png)
+
+- **Generate Map Buildings** is like for the map 2d, but instead with extruded buildings.
+
+![Buildings pipeline](./external_files/map2d5_pipeline.png)
+
+- **Generate_3D Map** is a longer pipeline to obtain a detailed 3d map (only available in France for now).
+
+![Map 3d pipeline](./external_files/map3d_pipeline.png)
+
+- **Generate Elevation Map** is available almost everywhere, based on SRTM data and generate a 3d mesh.
+
+![Elevation map pipeline](./external_files/elevation_pipeline.png)
+
 
 ## Feedback
 Do not hesitate to contact us or to give us some feedback.
