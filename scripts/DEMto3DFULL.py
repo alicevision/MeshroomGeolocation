@@ -4,8 +4,7 @@ import math
 from math import *
 import numpy as np
 import rasterio
-import mayavi.mlab as mlab
-#necessite pyqt5
+import trimesh
 import json
 
 ap = argparse.ArgumentParser()
@@ -62,10 +61,8 @@ url = 'https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south='+s
 response = requests.get(url)
 open(folderPath +'raster2.tif','wb').write(response.content)
 
-mlab.figure('Model 3D')
 with rasterio.open(folderPath +"raster2.tif") as src:
 	elev = src.read(1)
-	#print(elev.shape)
 nrows, ncols = elev.shape
 x, y = np.meshgrid(np.arange(ncols), np.arange(nrows))
 z = elev / 30
@@ -80,10 +77,22 @@ zScale = z * scale
 
 zTranslate = zScale - translation
 
-mesh = mlab.mesh(xScale,zTranslate,yScale)
+# Calculates vertices and faces to mesh
+vertices = np.dstack((xScale, zTranslate, -yScale)).reshape((-1, 3))
 
-mlab.savefig(finalFp)
-
-
-
-
+faces = []
+for r in range(nrows-1):
+    for c in range(ncols-1):
+        faces.append((
+            r * ncols + c,
+            r * ncols + c+1,
+            (r+1) * ncols + c
+        ))
+        faces.append((
+            r * ncols + c+1,
+            (r+1) * ncols + c+1,
+            (r+1) * ncols + c
+        ))
+          
+outMesh = trimesh.Trimesh(vertices=vertices, faces=faces)
+outMesh.export(finalFp)

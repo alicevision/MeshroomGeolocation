@@ -3,9 +3,18 @@ from __future__ import print_function
 __version__ = "1.2"
 
 from meshroom.core import desc
-
+import os
+from pathlib import Path
 class TopographyMap3D(desc.CommandLineNode):
-    commandLine = 'python ./lib/meshroom/nodes/scripts/DEMto3DFULL.py {allParams}'
+    # On Windows, needs to avoid backslash for command line execution (as_posix needed)
+    currentFilePath = Path(__file__).absolute()
+    currentFileFolderPath = currentFilePath.parent
+
+    # Get python environnement or global python
+    pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
+    targetScriptPath = (currentFileFolderPath / "../scripts/DEMto3DFULL.py").resolve()
+
+    commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
     category = 'Geolocalisation'
 
