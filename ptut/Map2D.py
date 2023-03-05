@@ -56,6 +56,15 @@ This node allows to get 2D map of where is the dataset.
             enabled=lambda node: 'boolRoads' in node.layersWanted.value,
             uid=[0],
         ),
+        desc.ChoiceParam(
+            name='verboseLevel',
+            label='Verbose Level',
+            description='''verbosity level (critical, error, warning, info, debug).''',
+            value='info',
+            values=['critical', 'error', 'warning', 'info', 'debug'],
+            exclusive=True,
+            uid=[],
+        ),
     ]
 
     outputs = [
