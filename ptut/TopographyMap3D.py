@@ -38,6 +38,7 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             description='''GPS coordinates file''',
             value= "",
             uid=[0],
+            enabled=lambda node: 'auto' in node.method.value
         ),
         desc.FloatParam(
             name="latInputPoint",
@@ -46,6 +47,7 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             value=33.668,
             range=(-180.0, 180.0, 0.0001),
             uid=[0],
+            enabled=lambda node: 'custom' in node.method.value
         ),
         desc.FloatParam(
             name="lonInputPoint",
@@ -54,6 +56,7 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             value=8.748,
             range=(-90.0, 90.0, 0.0001),
             uid=[0],
+            enabled=lambda node: 'custom' in node.method.value
         ),
         desc.FloatParam(
             name="kilometers",
@@ -78,6 +81,15 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             value=10,
             range=(-100, 100),
             uid=[0],
+        ),
+        desc.ChoiceParam(
+            name='verboseLevel',
+            label='Verbose Level',
+            description='''verbosity level (critical, error, warning, info, debug).''',
+            value='info',
+            values=['critical', 'error', 'warning', 'info', 'debug'],
+            exclusive=True,
+            uid=[],
         ),
     ]
 
