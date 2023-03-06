@@ -2,12 +2,16 @@
 
 ![Meshroom Geoloc](./external_files/meshroom_geoloc_banner.jpg)
 
-[Meshroom](https://alicevision.org/#meshroom) is a 3D Reconstruction Software using Photogrammetry
-Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in his geographical context. From the gps data of your camera you can create and export 2d Map, 2d Map with extrude buildings, elevation and 3d map. 
+[Meshroom](https://alicevision.org/#meshroom) is a 3D Reconstruction Software using Photogrammetry.
+
+Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in his geographical context. From the gps data of your camera you can create and export 2D Map, 2D Map with extrude buildings, elevation and 3D map. 
 
 {Worldwide} The 2D map uses Open Street Map and worldwide data. 
+
 {Worldwide} The 2D map with buildings uses Open Street Map Building.
+
 {Worldwide} The elevation map comes from NASA Data with a resolution of 30 meters.
+
 {France}    The 3D map comes from IGN (The french geographical institute) with a resolution of 25 meters, 5 meters, 1 meters and 30 centimeters for the lidar HD program.
 
 ## Install
