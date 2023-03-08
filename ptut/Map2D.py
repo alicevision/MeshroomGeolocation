@@ -25,7 +25,7 @@ This node allows to get 2D map of where is the dataset.
             label="Distance From Input Point",
             description="Distance from input point to get image.",
             value=550,
-            range=(30, 1000, 1.0), # should be more than 30, otherwise doesn't work
+            range=(30, 1000, 1), # should be more than 30, otherwise doesn't work
             uid=[0],
         ),
     ]
