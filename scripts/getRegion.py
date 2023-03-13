@@ -1,8 +1,7 @@
-# import module
 from geopy.geocoders import Nominatim
 import json
 
-## return region number (as string to handle corse) from the postCode
+# Return region number (as string to handle corse) from the postCode
 def regionFromPostcode(postCode: int):
     firstTwoNumber = postCode//1000
     # dom tom
@@ -20,26 +19,18 @@ def getDepartement(GPSData):
         # Reading from json file
         json_gps = json.load(GPSfile)
 
-
     # initialize Nominatim API
     geolocator = Nominatim(user_agent="getRegion")
     # Latitude & Longitude input
     Latitude = json_gps["latitude"]
     Longitude = json_gps["longitude"]
     
+    # Reverse Geocoding call
     location = geolocator.reverse(str(Latitude)+","+str(Longitude))
 
     address = location.raw['address']
-    print(address)
-    
-    # #region = str(address["county"]).encode('utf-8').decode('latin_1') if "county" in address else str(address["state"]).encode('utf-8').decode('latin_1')
-
-    region = str(address["county" if "county" in address else "state"]).encode('utf-8').decode('latin_1')
 
     return {
         "region": regionFromPostcode(int(address["postcode"])),
         "postcode": address["postcode"]
     }
-
-
-    

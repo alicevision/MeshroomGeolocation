@@ -5,6 +5,7 @@ __version__ = "1.2"
 from meshroom.core import desc
 
 import json
+import logging
 
 class GetGPSData(desc.Node):
     category = 'Geolocalisation'
@@ -34,17 +35,16 @@ This node allows to get GPS coordinates of a file.
 
     def processChunk(self, chunk):
         try:
-            print("GPS")
+            logging.basicConfig(level=logging.INFO)
+            logging.info("GPS")
 
             # Opening JSON file
             with open(chunk.node.inputFile.value, 'r') as inputfile:
-            
                 # Reading from json file
                 json_object = json.load(inputfile)
 
 
-            #get lat long from jsonfile
-
+            # Create all needed variables
             latitude = []
             latitudeRef = []
             longitude = []
@@ -69,28 +69,26 @@ This node allows to get GPS coordinates of a file.
 
             	# convert degrees to decimal
             	# Decimal degrees = Degrees + (Minutes/60) + (Seconds/3600)
-             
                 decLat.append(latPoint[0] + (latPoint[1]/60) + (latPoint[2]/3600))
-                
+                # If north keep the same, otherwise it has to be negative value
                 if latitudeRef[i] != "N" :
                     decLat[i]=-decLat[i]
                 
                 decLon.append(lonPoint[0] + (lonPoint[1]/60) + (lonPoint[2]/3600))
-                
                 if longitudeRef[i] != "E" :
                     decLon[i] = -decLon[i]
 
-
+            # Sum of all latitudes
             for i in range(len(latitude)):
                 latitudeSum += decLat[i]
             
+            # Sum of all longitudes
             for i in range(len(longitude)):
                 longitudeSum += decLon[i]
                 
-                
+            # Average of latitude and longitude
             latitudeAvg = latitudeSum / len(latitude)
             longitudeAvg = longitudeSum / len(longitude)
-
 
             # Data to be written
             output = {

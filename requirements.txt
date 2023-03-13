@@ -16,3 +16,6 @@ shapely==2.0.0
 timezonefinder==6.1.9
 trimesh==3.18.0
 Unidecode==1.3.6
+
+# Add for trimesh
+mapbox_earcut #https://github.com/mikedh/trimesh/issues/1691

@@ -1,12 +1,9 @@
 import numpy as np
 import os
 import re
-
-import json
 import logging
 
-#TODO logging
-
+# TODO : add explanation of each function
 def getTile(point, scale):
     moduloX = point[0]%scale
     moduloY = point[1]%scale
@@ -76,76 +73,83 @@ def HorizontalMergeAscii(tabFiles, outputFolder):
     np.savetxt(f"{outputFolder}/merged.asc", merged, header=header ,fmt="%3.2f")
     return fp
 
-def mergeASCII(InputFolder, OutputFolder, lambertData):
-    #get ascii files infos
-    inDir = InputFolder
-
+def mergeASCII(inputFolder, outputFolder, lambertData):
     path = r"^(.*_(\d{4})_(\d{4})_.*)$"
     result= []
 
-    for (dirpath, dirnames, filenames) in os.walk(inDir):
-        logging.info(dirpath)
-        for i in range(len(filenames)):
-            if filenames[i].endswith('.asc'):
-                result.append(re.search(path, dirpath+"/"+filenames[i]))
+    # get all files
+    for (dirpath, dirnames, filenames) in os.walk(inputFolder):
+        logging.debug(f"{dirpath=}")
+
+        # TODO : precise what is done here
+        for file in filenames:
+            if file.endswith('.asc'):
+                result.append(re.search(path, dirpath+"/"+file))
     
-    # get tiles
-    json_object = json.loads(lambertData)
+    # get source point
+    sourcePoint = [lambertData["latitude"]//1000,lambertData["longitude"]//1000]
+    logging.debug(f"Point: {sourcePoint}")
 
-    sourcePoint = [int(json_object["latitude"]//1000),int(json_object["longitude"]//1000)]
-
-    logging.info(f"Point: {sourcePoint}")
+    # TODO : for the moment, the dist of merge is set manually here but should be calculated
     dist = 5
     scale = int(getScale(result[0].group(1)))
+    logging.debug(f"{scale=}")
 
-    logging.info(scale)
-
+    # Get the point of the top left and bottom right of the area to merge
     pointTopLeft = [sourcePoint[0]-dist, sourcePoint[1]+dist]
     pointBottomRight = [sourcePoint[0]+dist, sourcePoint[1]-dist]
 
+    # Get the tile of the top left and bottom right of the area to merge
     tileTopLeft = getTile(pointTopLeft, scale)
     tileBottomRight = getTile(pointBottomRight, scale)
 
     tiles = []
 
-    for x in range (tileTopLeft[0], tileBottomRight[0]+scale, scale):
+    # TODO : explain what is done here
+    for x in range(tileTopLeft[0], tileBottomRight[0]+scale, scale):
         tilesSameX = []
-        for y in range (tileTopLeft[1], tileBottomRight[1]-scale, -scale):
+        for y in range(tileTopLeft[1], tileBottomRight[1]-scale, -scale):
             tilesSameX.append([x, y])
+
         tiles.append(tilesSameX)
 
-    logging.info(f"TILES : {tiles}")
+    logging.debug(f"TILES : {tiles}")
 
     fp = []
     taby = []
-    for i in range(len(tiles)):
-        fp.append([res.group(1) for res in result if [int(res.group(2)), int(res.group(3))] in tiles[i]])
-        taby.append([res.group(3) for res in result if [int(res.group(2)), int(res.group(3))] in tiles[i]])
 
+    # TODO : explain what is done here
+    for tile in tiles:
+        fp.append([res.group(1) for res in result if [int(res.group(2)), int(res.group(3))] in tile])
+        taby.append([res.group(3) for res in result if [int(res.group(2)), int(res.group(3))] in tile])
+
+    # remove empty lists
     fp = [f for f in fp if f != []]
     taby = [y for y in taby if y != []]
 
     # reverse order so the order is right for the merge
-    for i in range(len(taby)):
-        taby[i].sort(reverse = True)
-    for i in range(len(fp)):
-        fp[i].sort(reverse = True)
+    for cell in taby:
+        cell.sort(reverse = True)
+    for cell in fp:
+        cell.sort(reverse = True)
 
-    logging.info(fp)
-    logging.info(taby)
+    logging.debug(f"{fp=}")
+    logging.debug(f"{taby=}")
 
-    # find max length of all tabs and fill tabs with -1 value to reach maxlength
+    # find max length of all tabs
     maxdepth=0
-    for i in range (len(taby)):
-        if (len(taby[i])>maxdepth):
-            maxdepth = len(taby[i])
+    for cell in taby:
+        if (len(cell)>maxdepth):
+            maxdepth = len(cell)
 
-    logging.info(f"max length : {maxdepth}")
+    logging.debug(f"max length : {maxdepth}")
 
+    #  fill tabs with -1 value to reach maxlength
     for i in range(len(taby)):
         if (len(taby[i]) < maxdepth) :
             taby[i].append('-1')
 
+    # TODO : explain what is done here
     max_of_rows = []
     for i in range(maxdepth):
         row = []
@@ -153,6 +157,7 @@ def mergeASCII(InputFolder, OutputFolder, lambertData):
             row.append(column[i])
         max_of_rows.append(max(row))
 
+    # TODO : explain what is done here
     for c in range(len(taby)):
         for r in range(maxdepth):
             if (taby[c][r] < max_of_rows[r]):
@@ -164,17 +169,17 @@ def mergeASCII(InputFolder, OutputFolder, lambertData):
                 if (int(scale) == 1):
                     fp[c].insert(r, 'external_files/ascii_nodata_1M.asc')
                 
-    logging.info(fp)
+    logging.debug(f"{fp=}")
+    logging.debug(f"{dirpath=}")
 
-    logging.info(dirpath)
-
-    logging.info("vertical merge \n")
+    logging.debug("vertical merge \n")
     verticalMergeTab = [None]*len(fp)
     for i in range(len(fp)):
-        verticalMergeTab[i] = VerticalMergeAscii(fp[i], i, OutputFolder)
+        verticalMergeTab[i] = VerticalMergeAscii(fp[i], i, outputFolder)
 
-    logging.info(verticalMergeTab)
+    logging.debug(f"{verticalMergeTab=}")
 
-    finalMerge = HorizontalMergeAscii(verticalMergeTab, OutputFolder)
+    # TODO : explain what is done here
+    finalMerge = HorizontalMergeAscii(verticalMergeTab, outputFolder)
 
-    logging.info(f"FINAL MERGE : {finalMerge}")
+    logging.debug(f"FINAL MERGE : {finalMerge}")

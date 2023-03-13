@@ -2,21 +2,25 @@ from pathlib import Path
 import trimesh
 from PIL import Image
 
-def generatePlane(TexturePath, OutputFolder, Output):
+def generatePlane(TexturePath, OutputFolder, Output, distance):
+    # Needs distance to right scale the plane
+    distance = int(distance)
+
     texturePath = Path(TexturePath).resolve()
 
     parentPath = Path(__file__).parent.resolve()
     outputFolderPath = parentPath / OutputFolder
 
+    # Collect informations where to save the exported plane
     outputFolderPath.mkdir( exist_ok=True)
     objPath = Output
     mtlPath = outputFolderPath / 'mltFile.mtl'
 
     image = Image.open(texturePath)
 
-    # create plane
+    # Create plane with corresponding vertices
     plane = trimesh.Trimesh(
-        vertices=[[-15, 0, 15], [15, 0, 15], [15, 0, -15], [-15, 0, -15]],
+        vertices=[[-distance, 0, distance], [distance, 0, distance], [distance, 0, -distance], [-distance, 0, -distance]],
         faces=[[0, 1, 2], [0, 2, 3]],
     )
 
