@@ -3,7 +3,7 @@ import os
 import re
 import logging
 
-# TODO : add explanation of each function
+# get the target tile 
 def getTile(point, scale):
     moduloX = point[0]%scale
     moduloY = point[1]%scale
@@ -12,6 +12,7 @@ def getTile(point, scale):
 
     return tile
 
+# get the cell size (tile size) of the ASCII file 
 def getScale(file):
     file = open(file, "r")
     line_cellsize = file.readlines()[4]
@@ -20,6 +21,7 @@ def getScale(file):
 
     return scale
 
+# write the header of the ASCII file to be created
 def writeHeader(file, merged):
     file = open(file, "r")
     file = file.read()
@@ -43,6 +45,8 @@ def writeHeader(file, merged):
 
     return header
 
+
+# merge the files found vertically in the outputFolder
 def VerticalMergeAscii(tabFiles, count, outputFolder):
     files = [None] * len(tabFiles)
     for i in range (0, len(tabFiles)):
@@ -58,6 +62,7 @@ def VerticalMergeAscii(tabFiles, count, outputFolder):
     np.savetxt(f"{outputFolder}/vmerged{count}.asc", merged, header=header ,fmt="%3.2f")
     return fp
 
+# merge the files found horizontally in the outputFolder
 def HorizontalMergeAscii(tabFiles, outputFolder):
     files = [None] * len(tabFiles)
     for i in range (0, len(tabFiles)):
@@ -73,6 +78,7 @@ def HorizontalMergeAscii(tabFiles, outputFolder):
     np.savetxt(f"{outputFolder}/merged.asc", merged, header=header ,fmt="%3.2f")
     return fp
 
+# merge all files to create ASCII file
 def mergeASCII(inputFolder, outputFolder, lambertData):
     path = r"^(.*_(\d{4})_(\d{4})_.*)$"
     result= []
@@ -81,7 +87,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     for (dirpath, dirnames, filenames) in os.walk(inputFolder):
         logging.debug(f"{dirpath=}")
 
-        # TODO : precise what is done here
+        #get all files ending with .asc
         for file in filenames:
             if file.endswith('.asc'):
                 result.append(re.search(path, dirpath+"/"+file))
@@ -105,7 +111,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
 
     tiles = []
 
-    # TODO : explain what is done here
+    # add in a list all the tiles in the same column
     for x in range(tileTopLeft[0], tileBottomRight[0]+scale, scale):
         tilesSameX = []
         for y in range(tileTopLeft[1], tileBottomRight[1]-scale, -scale):
@@ -118,7 +124,8 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     fp = []
     taby = []
 
-    # TODO : explain what is done here
+    # add the file path of each tile in fp list
+    # add the y position of each tile in taby list
     for tile in tiles:
         fp.append([res.group(1) for res in result if [int(res.group(2)), int(res.group(3))] in tile])
         taby.append([res.group(3) for res in result if [int(res.group(2)), int(res.group(3))] in tile])
@@ -144,12 +151,12 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
 
     logging.debug(f"max length : {maxdepth}")
 
-    #  fill tabs with -1 value to reach maxlength
+    # fill tabs with -1 value to reach maxlength
     for i in range(len(taby)):
         if (len(taby[i]) < maxdepth) :
             taby[i].append('-1')
 
-    # TODO : explain what is done here
+    # get the maximum of rows we have in a column
     max_of_rows = []
     for i in range(maxdepth):
         row = []
@@ -157,9 +164,11 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
             row.append(column[i])
         max_of_rows.append(max(row))
 
-    # TODO : explain what is done here
+    # insert the nodata file to complete the ASCII file
     for c in range(len(taby)):
         for r in range(maxdepth):
+            # if the column doesn't have the same number of rows than the max rows
+            # add a nodata file to the column
             if (taby[c][r] < max_of_rows[r]):
                 taby[c].insert(r, max_of_rows[r])
                 if (int(scale) == 25):
@@ -172,6 +181,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     logging.debug(f"{fp=}")
     logging.debug(f"{dirpath=}")
 
+    # merge vertically the files found
     logging.debug("vertical merge \n")
     verticalMergeTab = [None]*len(fp)
     for i in range(len(fp)):
@@ -179,7 +189,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
 
     logging.debug(f"{verticalMergeTab=}")
 
-    # TODO : explain what is done here
+    # merge horizontally the first merge output
     finalMerge = HorizontalMergeAscii(verticalMergeTab, outputFolder)
 
     logging.debug(f"FINAL MERGE : {finalMerge}")
