@@ -8,7 +8,7 @@ import json
 import logging
 
 class GetGPSData(desc.Node):
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to get GPS coordinates of a file.
 '''

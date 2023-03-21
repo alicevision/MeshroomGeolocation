@@ -15,7 +15,7 @@ class MapBuildings(desc.CommandLineNode):
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
         This node displays the 2,5D Map with OSM Buildings data.
     '''

@@ -6,7 +6,7 @@ from meshroom.core import desc
 class Sun(desc.CommandLineNode):
     commandLine = 'python ./lib/meshroom/nodes/scripts/sun.py {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to display sun according to time and gps.
 '''

@@ -16,7 +16,7 @@ class Merge(desc.CommandLineNode):
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to merge files to one File.
 '''

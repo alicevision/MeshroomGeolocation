@@ -16,7 +16,7 @@ class TopographyMap3D(desc.CommandLineNode):
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
 
     documentation = '''
 This node allows to get SRTM Data represented as a mesh of the localisation.

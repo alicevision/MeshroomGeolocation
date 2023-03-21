@@ -7,7 +7,7 @@ from meshroom.core import desc
 class Mesh3D(desc.CommandLineNode):
     commandLine = 'python ./lib/meshroom/nodes/scripts/mesh3D.py {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to generate a mesh from .asc and .las file.
 '''

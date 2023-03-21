@@ -17,7 +17,7 @@ class Map2D(desc.CommandLineNode):
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
     
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to get 2D map of where is the dataset.
 '''

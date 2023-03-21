@@ -7,7 +7,7 @@ from meshroom.core import desc
 class North(desc.CommandLineNode):
     commandLine = 'python ./lib/meshroom/nodes/scripts/north.py {allParams}'
 
-    category = 'Geolocalisation'
+    category = 'Geolocation'
     documentation = '''
 This node allows to get north around dataset.
 '''
