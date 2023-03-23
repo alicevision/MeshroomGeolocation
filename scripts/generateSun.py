@@ -4,7 +4,7 @@ import numpy as np
 from PIL import Image
 
 def generateSun(output, sunData):
-    path = "./lib/meshroom/nodes/scripts/yellow_texture.jpg"
+    path = "../scripts/yellow_texture.jpg"
     texturePath = Path(path).resolve()
 
     parentPath = Path(__file__).parent.resolve()
@@ -13,8 +13,6 @@ def generateSun(output, sunData):
     outputFolderPath.mkdir( exist_ok=True)
     objPath = outputFolderPath / 'result.obj'
     mtlPath = outputFolderPath / 'texture.mtl'
-
-    print(outputFolderPath)
 
     image = Image.open(texturePath)
 
@@ -43,9 +41,6 @@ def generateSun(output, sunData):
     # Create a rotation matrix
     rotation_matrix = trimesh.transformations.rotation_matrix(angle, axis)
 
-    # Create a translation matrix to move the sphere back to the original position
-    translation_matrix_back = trimesh.transformations.translation_matrix(rotation_point)
-
     # Apply the translation matrix to the sphere
     sphere.apply_transform(translation_matrix)
 
@@ -56,6 +51,7 @@ def generateSun(output, sunData):
     sphere.visual = trimesh.visual.texture.TextureVisuals(image=image)
     sphere.visual.material.name = "mapMat"
 
+    # export the sun to an obj file
     with open(objPath, 'w') as file:
         sphere.export(
             file,
@@ -64,3 +60,8 @@ def generateSun(output, sunData):
             mtl_name=mtlPath.name,
             resolver=trimesh.visual.resolvers.FilePathResolver(mtlPath)
         )
+
+    #force add line to .obj because assimp doesn't read last line so miss a face
+    file = open(objPath, 'a+')
+    file.write('\n')
+    file.close()

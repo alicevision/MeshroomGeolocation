@@ -70,7 +70,6 @@ def into_range(x, range_min, range_max):
 def getSunPosition3DEnv(GPSFile, TimeData):
     # Opening JSON file
     with open(GPSFile, 'r') as inputfile:
-    
         # Reading from json file
         json_object = json.load(inputfile)
     
@@ -79,11 +78,9 @@ def getSunPosition3DEnv(GPSFile, TimeData):
 
     location=(latitude, longitude)
 
-
-    json_object = json.loads(TimeData)
-    datetime = json_object["datetime"]
-    offsetTime = json_object["offsetTime"]
-
+    # get the time data
+    datetime = TimeData["datetime"]
+    offsetTime = TimeData["offsetTime"]
     datetime.append(offsetTime)
 
     # Close Encounters latitude, longitude
@@ -96,12 +93,11 @@ def getSunPosition3DEnv(GPSFile, TimeData):
     earthSunDistance = 150000000 # 1ua
     distance = earthSunDistance/math.sin(elevation)
 
-    # print("Distance point-sun : ", distance)
-
     # distance² = sol²+earthSunDistance²
     # sol² = distance² - earthSunDistance²
     floorDistance = math.sqrt(math.pow(distance, 2) - math.pow(earthSunDistance, 2))
 
+    # divide by 10^7 to get the distance in meters
     divideFactor = 10000000
 
     resultDistance = distance/divideFactor
