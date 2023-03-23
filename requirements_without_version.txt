@@ -1,0 +1,19 @@
+geopandas
+geopy
+laspy
+matplotlib
+meteostat
+numpy
+osmnx
+Pillow
+py7zr
+pyproj
+python_dateutil
+rasterio
+requests
+shapely
+timezonefinder
+trimesh
+
+# Add for trimesh
+mapbox_earcut #https://github.com/mikedh/trimesh/issues/1691
