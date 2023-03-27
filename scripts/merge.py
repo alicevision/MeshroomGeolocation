@@ -7,7 +7,6 @@ import mergeAsciiTiles
 import convertWgs84ToLambert93
 import logLevel
 
-#TODO logging
 # Parsing of all arguments
 def buildArgumentParser() -> ArgumentParser:
     ap = ArgumentParser()
