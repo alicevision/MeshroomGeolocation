@@ -18,7 +18,6 @@ def buildArgumentParser() -> ArgumentParser:
     ap.add_argument("--lonInputPoint", help="longitude custom", type=str)
     ap.add_argument("--kilometers", help="kilometers around point", type=float)
     ap.add_argument("--scale", help="scale of the resulted mesh", type=float)
-    ap.add_argument("--verticalTranslation", help="vertical translation for the mesh", type=float)
     ap.add_argument("--verboseLevel", help="verbose level for logging", type=str)
     ap.add_argument("--output", help="output file for the mesh", type=str)
     ap.add_argument("--outputFolder", help="output folder to save the raster", type=str)
@@ -92,8 +91,9 @@ def main():
     y = y * args.scale 
     z = z * args.scale 
 
-    # TODO : calculer la translation en fonction de la distance entre les points
-    z = z - args.verticalTranslation
+    #center z coordinates
+    z_elev = z[int(len(z)/2)]
+    z = z - z_elev
 
     # Calculates vertices and faces to mesh
     vertices = np.dstack((x, z, -y)).reshape((-1, 3))
