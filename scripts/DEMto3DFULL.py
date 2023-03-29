@@ -17,14 +17,14 @@ def buildArgumentParser() -> ArgumentParser:
     ap.add_argument("--latInputPoint", help="latitude custom", type=str)
     ap.add_argument("--lonInputPoint", help="longitude custom", type=str)
     ap.add_argument("--kilometers", help="kilometers around point", type=float)
-    ap.add_argument("--scale", help="scale of the resulted mesh", type=float)
+    ap.add_argument("--API_Key", help="API key", type=str)
     ap.add_argument("--verboseLevel", help="verbose level for logging", type=str)
     ap.add_argument("--output", help="output file for the mesh", type=str)
     ap.add_argument("--outputFolder", help="output folder to save the raster", type=str)
     return ap
 
-def internetRequestSRTM(north, south, east, west):
-    url = 'https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south='+south+'&north='+north+'&west='+west+'&east='+east+'&outputFormat=GTiff&API_Key=b3aae2cb0f7c823f84f2d2e98651c906'
+def internetRequestSRTM(north, south, east, west, API_Key):
+    url = 'https://portal.opentopography.org/API/globaldem?demtype=SRTMGL1&south='+south+'&north='+north+'&west='+west+'&east='+east+'&outputFormat=GTiff&API_Key='+API_Key
     return requests.get(url)
 
 def calculateFaces(nrows, ncols):
@@ -71,7 +71,7 @@ def main():
     logging.debug(f"{north=} \n {south=} \n {east=} \n {west=}")
 
     #request to the API
-    response = internetRequestSRTM(north, south, east, west)
+    response = internetRequestSRTM(north, south, east, west, args.API_Key)
     open(args.outputFolder +'raster2.tif','wb').write(response.content)
 
     #read the raster
@@ -86,10 +86,6 @@ def main():
     #centrage du mesh
     x -= int(ncols/2)
     y -= int(nrows/2)
-
-    x = x * args.scale 
-    y = y * args.scale 
-    z = z * args.scale 
 
     #center z coordinates
     z_elev = z[int(len(z)/2)]

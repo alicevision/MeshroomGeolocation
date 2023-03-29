@@ -66,12 +66,11 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             range=(1, 1000),
             uid=[0],
         ),
-        desc.FloatParam(
-            name="scale",
-            label="Scale",
-            description="Scale of the map",
-            value=0.2,
-            range=(0.0, 1.0, 0.1),
+        desc.StringParam(
+            name="API_Key",
+            label="API Key",
+            description="API Key",
+            value="b3aae2cb0f7c823f84f2d2e98651c906",
             uid=[0],
         ),
         desc.ChoiceParam(
