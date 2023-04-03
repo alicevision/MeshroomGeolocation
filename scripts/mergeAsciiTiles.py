@@ -96,14 +96,13 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     sourcePoint = [lambertData["latitude"]//1000,lambertData["longitude"]//1000]
     logging.debug(f"Point: {sourcePoint}")
 
-    # TODO : for the moment, the dist of merge is set manually here but should be calculated
-    dist = 5
+    # get the scale of the ASCII file
     scale = int(getScale(result[0].group(1)))
     logging.debug(f"{scale=}")
 
     # Get the point of the top left and bottom right of the area to merge
-    pointTopLeft = [sourcePoint[0]-dist, sourcePoint[1]+dist]
-    pointBottomRight = [sourcePoint[0]+dist, sourcePoint[1]-dist]
+    pointTopLeft = [sourcePoint[0]-scale, sourcePoint[1]+scale]
+    pointBottomRight = [sourcePoint[0]+scale, sourcePoint[1]-scale]
 
     # Get the tile of the top left and bottom right of the area to merge
     tileTopLeft = getTile(pointTopLeft, scale)
