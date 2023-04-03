@@ -7,7 +7,7 @@ from math import *
 import mergeAsciiTiles
 import logging
 
-def getDatasAccordingToFileType(inputFile):
+def getDatasAccordingToFileType(inputFile, dist):
   # if file is lidar
   if inputFile.endswith('.las'):
     point_cloud = lp.read(inputFile)
@@ -96,7 +96,7 @@ def grid_subsampling(crop_points, voxel_size):
 def meshing(inputFile, dist, meshMethod, lambertData, ExportObj):
   logging.debug(f"Input file : {inputFile}")
 
-  points, bbox_percent = getDatasAccordingToFileType(inputFile)
+  points, bbox_percent = getDatasAccordingToFileType(inputFile, dist)
 
   #get bounding box of all point cloud 
   points_min = np.min(points, axis=0)
