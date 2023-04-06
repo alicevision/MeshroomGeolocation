@@ -94,7 +94,7 @@ def Map2D(GPSData, distance, outputFolder, wantedLayers, roadsNameBool:str):
     boolRoads = 'boolRoads' in wantedLayers
     boolBuildings = 'boolBuildings' in wantedLayers
     boolWater = 'boolWater' in wantedLayers
-    boolNameRoads = roadsNameBool.lower() == 'true'
+    boolNameRoads =True if roadsNameBool == True else False
 
     fig, ax = plt.subplots(figsize = (4, 4))
 
