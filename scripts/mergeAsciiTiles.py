@@ -3,16 +3,16 @@ import os
 import re
 import logging
 
-# get the target tile 
+# get the target tile
 def getTile(point, scale):
     moduloX = point[0]%scale
     moduloY = point[1]%scale
 
-    tile = [point[0]-moduloX, point[1]+(scale-moduloY)]
+    tile = [int(point[0]-moduloX), int(point[1]+(scale-moduloY))]
 
     return tile
 
-# get the cell size (tile size) of the ASCII file 
+# get the cell size (tile size) of the ASCII file
 def getScale(file):
     file = open(file, "r")
     line_cellsize = file.readlines()[4]
@@ -38,8 +38,8 @@ def writeHeader(file, merged):
 
     header = "ncols    %s\n" % merged.shape[1]
     header += "nrows    %s\n" % merged.shape[0]
-    header += "xllcorner %s\n" % xllcorner 
-    header += "yllcorner %s\n" % yllcorner 
+    header += "xllcorner %s\n" % xllcorner
+    header += "yllcorner %s\n" % yllcorner
     header += "cellsize %s\n" % cellsize
     header += "NODATA_value -9999"
 
@@ -51,9 +51,9 @@ def VerticalMergeAscii(tabFiles, count, outputFolder):
     files = [None] * len(tabFiles)
     for i in range (0, len(tabFiles)):
         files[i] = np.loadtxt(tabFiles[i], skiprows=6 )
-    
+
     merged = np.vstack(files)
-    
+
     header = writeHeader(tabFiles[0], merged)
 
     if not os.path.exists('merge'):
@@ -67,7 +67,7 @@ def HorizontalMergeAscii(tabFiles, outputFolder):
     files = [None] * len(tabFiles)
     for i in range (0, len(tabFiles)):
         files[i] = np.loadtxt(tabFiles[i], skiprows=6 )
-    
+
     merged = np.column_stack(files)
 
     header = writeHeader(tabFiles[0], merged)
@@ -85,13 +85,13 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
 
     # get all files
     for (dirpath, dirnames, filenames) in os.walk(inputFolder):
-        logging.debug(f"{dirpath=}")
+        logging.debug(f"dirpath={dirpath}")
 
         #get all files ending with .asc
         for file in filenames:
             if file.endswith('.asc'):
                 result.append(re.search(path, dirpath+"/"+file))
-    
+
     # get source point
     sourcePoint = [lambertData["latitude"]//1000,lambertData["longitude"]//1000]
     logging.debug(f"Point: {sourcePoint}")
@@ -99,7 +99,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     # TODO : for the moment, the dist of merge is set manually here but should be calculated
     dist = 5
     scale = int(getScale(result[0].group(1)))
-    logging.debug(f"{scale=}")
+    logging.debug(f"scale={scale}")
 
     # Get the point of the top left and bottom right of the area to merge
     pointTopLeft = [sourcePoint[0]-dist, sourcePoint[1]+dist]
@@ -108,6 +108,8 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     # Get the tile of the top left and bottom right of the area to merge
     tileTopLeft = getTile(pointTopLeft, scale)
     tileBottomRight = getTile(pointBottomRight, scale)
+    logging.debug(f"tileTopLeft={tileTopLeft}")
+    logging.debug(f"tileBottomRight={tileBottomRight}")
 
     tiles = []
 
@@ -140,8 +142,8 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     for cell in fp:
         cell.sort(reverse = True)
 
-    logging.debug(f"{fp=}")
-    logging.debug(f"{taby=}")
+    logging.debug(f"fp={fp}")
+    logging.debug(f"taby={taby}")
 
     # find max length of all tabs
     maxdepth=0
@@ -177,9 +179,9 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
                     fp[c].insert(r, 'external_files/ascii_nodata_5M.asc')
                 if (int(scale) == 1):
                     fp[c].insert(r, 'external_files/ascii_nodata_1M.asc')
-                
-    logging.debug(f"{fp=}")
-    logging.debug(f"{dirpath=}")
+
+    logging.debug(f"fp={fp}")
+    logging.debug(f"dirpath={dirpath}")
 
     # merge vertically the files found
     logging.debug("vertical merge \n")
@@ -187,7 +189,7 @@ def mergeASCII(inputFolder, outputFolder, lambertData):
     for i in range(len(fp)):
         verticalMergeTab[i] = VerticalMergeAscii(fp[i], i, outputFolder)
 
-    logging.debug(f"{verticalMergeTab=}")
+    logging.debug(f"verticalMergeTab={verticalMergeTab}")
 
     # merge horizontally the first merge output
     finalMerge = HorizontalMergeAscii(verticalMergeTab, outputFolder)
