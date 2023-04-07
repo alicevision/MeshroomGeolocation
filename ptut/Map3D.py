@@ -36,7 +36,7 @@ This node allows to get 3D map of where is the dataset.
             value=25,
             values=[0.30, 1, 5, 25],
             exclusive=True,
-            uid=[],
+            uid=[0],
         ),
         desc.ChoiceParam(
             name='verboseLevel',
