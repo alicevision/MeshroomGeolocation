@@ -1,15 +1,10 @@
-# Import Meteostat library and dependencies
 from datetime import datetime
 from meteostat import Point, Hourly
-
 import json
 
-#TODO json to dict
 def getWeather(GPSData, TimeData):
-    # get coordinates
     # Opening JSON file
     with open(GPSData, 'r') as inputfile:
-
         # Reading from json file
         json_object = json.load(inputfile)
 
@@ -17,13 +12,10 @@ def getWeather(GPSData, TimeData):
     longitude = json_object["longitude"]    
 
     # get date
-    # Reading from json file
-    json_object = json.loads(TimeData)
-
-    time = json_object["datetime"]
+    time = TimeData["datetime"]
 
     #add jet lag to time
-    offsetTime = json_object["offsetTime"]
+    offsetTime = TimeData["offsetTime"]
     time.append(offsetTime)
 
     datefile = tuple(int(element) for element in time)
@@ -40,15 +32,11 @@ def getWeather(GPSData, TimeData):
     data = Hourly(location, ymd, ymd)
     data = data.fetch()
 
-    # Data to be written
-    output = {
+    # Data to return
+    return {
         "temperature": data['temp'][0],
         "humidity": data['rhum'][0],
         "wind direction": data['wdir'][0],
         "wind speed": data['wspd'][0],
         "weather condition": (int)(data['coco'][0]),
     }
-
-    # Serializing json
-    json_object = json.dumps(output, indent=4)
-    return json_object

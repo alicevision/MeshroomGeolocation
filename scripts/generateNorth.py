@@ -17,6 +17,7 @@ def generateNorth(ReferenceMap, OutputFolder, Output):
 
     triangle = trimesh.creation.cone(0.5, 2)
 
+    # rotate and translate the triangle so that it is pointing north
     angle = np.deg2rad(180)
     axis = [0, 1, 0]
     rotation_matrix = trimesh.transformations.rotation_matrix(angle, axis)
@@ -29,6 +30,7 @@ def generateNorth(ReferenceMap, OutputFolder, Output):
     triangle.visual.material.name = "mapMat"
 
 
+    # export the triangle to an obj file
     with open(objPath, 'w') as file:
         triangle.export(
             file,

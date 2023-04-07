@@ -4,15 +4,15 @@
 
 [Meshroom](https://alicevision.org/#meshroom) is a 3D Reconstruction Software using Photogrammetry.
 
-Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in his geographical context. From the gps data of your camera you can create and export 2D Map, 2D Map with extrude buildings, elevation and 3D map. 
+Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in its geographical context. From the GPS data of your camera you can create and export 2D Map, 2D Map with extruded buildings, elevation and 3D map. 
 
-{Worldwide} The 2D map uses Open Street Map and worldwide data. 
+{Worldwide} The 2D map uses Open Street Map and Worldwide data. 
 
-{Worldwide} The 2D map with buildings uses Open Street Map Building.
+{Worldwide} The 2D map with buildings uses Open Street Map Buildings.
 
 {Worldwide} The elevation map comes from NASA Data with a resolution of 30 meters.
 
-{France}    The 3D map comes from IGN (The french geographical institute) with a resolution of 25 meters, 5 meters, 1 meters and 30 centimeters for the lidar HD program.
+{France}    The 3D map comes from IGN (The french geographical institute) with a resolution of 25 meters, 5 meters, 1 meter and 30 centimeters for the Lidar HD program.
 
 ## Install
 It is a module for [Meshroom](https://alicevision.org/#meshroom).
@@ -29,7 +29,7 @@ Custom nodes can be added to Meshroom by setting the environment variable `MESHR
 
 Here `MESHROOM_NODES_PATH = path/to/MeshroomGeolocation`.
 
-All the nodes will be in Geolocalisation category in Meshroom UI.
+All the nodes will be in Geolocation category in Meshroom UI.
 
 Custom pipelines can be added to Meshroom by setting the environment variable `MESHROOM_PIPELINE_TEMPLATES_PATH`.
 

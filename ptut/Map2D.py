@@ -3,11 +3,21 @@ from __future__ import print_function
 __version__ = "1.2"
 
 from meshroom.core import desc
+import os
+from pathlib import Path
 
 class Map2D(desc.CommandLineNode):
-    commandLine = 'python ./lib/meshroom/nodes/scripts/map2D.py {allParams}'
+    # On Windows, needs to avoid backslash for command line execution (as_posix needed)
+    currentFilePath = Path(__file__).absolute()
+    currentFileFolderPath = currentFilePath.parent
 
-    category = 'Geolocalisation'
+    # Get python environnement or global python
+    pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
+    targetScriptPath = (currentFileFolderPath / "../scripts/map2D.py").resolve()
+
+    commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
+    
+    category = 'Geolocation'
     documentation = '''
 This node allows to get 2D map of where is the dataset.
 '''
@@ -16,7 +26,7 @@ This node allows to get 2D map of where is the dataset.
         desc.File(
             name='GPSFile',
             label='GPS coordinates file',
-            description='''GPS coordinates file.''',
+            description='''GPS coordinates contained in JSON file.''',
             value= "",
             uid=[0],
         ),
@@ -25,8 +35,35 @@ This node allows to get 2D map of where is the dataset.
             label="Distance From Input Point",
             description="Distance from input point to get image.",
             value=550,
-            range=(30, 1000, 1.0), # should be more than 30, otherwise doesn't work
+            range=(250, 2000, 250),
             uid=[0],
+        ),
+        desc.ChoiceParam(
+            name='layersWanted',
+            label='Layers Wanted',
+            description='All the layers wanted to generate the 2D map.',
+            value=['boolBuildings'],
+            values=['boolBuildings', 'boolRoads', 'boolWater'],
+            exclusive=False,
+            uid=[0],
+            joinChar=',',
+        ),
+        desc.BoolParam(
+            name='roadsName',
+            label='Name of roads',
+            description='Name of roads.',
+            value=False,
+            enabled=lambda node: 'boolRoads' in node.layersWanted.value,
+            uid=[0],
+        ),
+        desc.ChoiceParam(
+            name='verboseLevel',
+            label='Verbose Level',
+            description='''verbosity level (critical, error, warning, info, debug).''',
+            value='info',
+            values=['critical', 'error', 'warning', 'info', 'debug'],
+            exclusive=True,
+            uid=[],
         ),
     ]
 
