@@ -69,7 +69,7 @@ def main():
     east = str(east)
     west = str(west)
 
-    logging.debug(f"{north=} \n {south=} \n {east=} \n {west=}")
+    logging.debug(f"north={north} \n south={south} \n east={east} \n west={west}")
 
     #request to the API
     response = internetRequestSRTM(north, south, east, west)
@@ -88,9 +88,9 @@ def main():
     x -= int(ncols/2)
     y -= int(nrows/2)
 
-    x = x * args.scale 
-    y = y * args.scale 
-    z = z * args.scale 
+    x = x * args.scale
+    y = y * args.scale
+    z = z * args.scale
 
     # TODO : calculer la translation en fonction de la distance entre les points
     z = z - args.verticalTranslation

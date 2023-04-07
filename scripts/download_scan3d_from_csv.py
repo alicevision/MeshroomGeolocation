@@ -5,20 +5,32 @@ import os
 from pathlib import Path
 import shutil
 
+currentDir = os.path.dirname(os.path.realpath(__file__))
+rootDir = os.path.dirname(currentDir)
+
 def download(departementData: dict, Resolution, OutputFolder):
-    dp_number = departementData["region"]
 
     logging.debug(f"Resolution: {int(Resolution)}")
 
     # Choose the right csv file according to the resolution
-    if int(Resolution) == 1: csv_path ='../external_files/RGE_Alti_1m.csv' #default
-    if int(Resolution) == 5: csv_path = '../external_files/RGE_Alti_5m.csv'
-    if int(Resolution) == 25: csv_path = '../external_files/BD_Alti_25m.csv'
-    logging.debug(f"Path : {csv_path}")
+    if int(Resolution) == 1:
+        csv_path = os.path.join(rootDir, 'external_files/RGE_Alti_1m.csv') #default
+    elif int(Resolution) == 5:
+        csv_path = os.path.join(rootDir, 'external_files/RGE_Alti_5m.csv')
+    elif int(Resolution) == 25:
+        csv_path = os.path.join(rootDir, 'external_files/BD_Alti_25m.csv')
+    else:
+        raise RuntimeError(f"Unknown resolution: {Resolution}")
+    logging.debug(f"Path: {csv_path}")
 
     # Get the path of the current file and the parent folder
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
+    logging.debug(f"currentFileFolderPath: {currentFileFolderPath}")
+    logging.debug(f"rootDir: {rootDir}")
+
+    csv_fullpath = (currentFileFolderPath / csv_path).resolve()
+    logging.debug(f"csv_fullpath: {csv_fullpath}")
 
     csv = open((currentFileFolderPath / csv_path).resolve(), "r")
     csv = csv.read()
@@ -26,15 +38,21 @@ def download(departementData: dict, Resolution, OutputFolder):
 
     #  Get infos of all tiles
     path = r'^(\d{1,}(?:[A-Z]?)),(.*[a-zA-Z]),(?:"?)(.*\w).*$'
-    result = [re.search(path, line) for line in lines]
-    result = [x for x in result if x != None]
+    allTiles = [re.search(path, line) for line in lines]
+    allTiles = [x for x in allTiles if x != None]
+    logging.debug(f"Matching lines: {[a.group(1) for a in allTiles]}")
 
     # Use regex to get the right tile
-    result = [matchs for matchs in result if (matchs.group(1)) == dp_number]
+    dp_number = departementData["region"]
+    logging.debug(f"Department number: {dp_number}")
+    result = [matchs for matchs in allTiles if (matchs.group(1)) == dp_number]
+    if not result:
+        raise RuntimeError("No matching tile.")
 
-    for i in range(len(result)):
+    filename = ""
+    for r in result:
         # Get all URLs of the right tiles
-        links = result[i].group(3).split(',')
+        links = r.group(3).split(',')
         for j in range (len(links)):
             filename = os.path.basename(links[j])
             response = requests.get(links[j], stream=True)
@@ -55,12 +73,15 @@ def download(departementData: dict, Resolution, OutputFolder):
                         f.write(data)
             else:
                 logging.info('Request failed: %d' % response.status_code)
-    
-    return OutputFolder+"/"+filename
+
+    res = os.path.join(OutputFolder, filename)
+    return res
 
 # Move all asc files from the unzipped folder to the output folder
 def extractFromFolder(UnzipPath, OutputFolder):
     for (dirpath, dirnames, filenames) in os.walk(UnzipPath):
         for inFile in filenames:
-            if inFile.endswith('.asc'):	
-                shutil.move(dirpath + "/" + inFile, OutputFolder+ "/"+ inFile)
+            if inFile.endswith('.asc'):
+                shutil.move(os.path.join(dirpath, inFile), os.path.join(OutputFolder, inFile))
+
+
