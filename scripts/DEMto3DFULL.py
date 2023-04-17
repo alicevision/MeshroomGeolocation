@@ -83,7 +83,7 @@ def main():
     x, y = np.meshgrid(np.arange(ncols), np.arange(nrows))
     z = elev / 30
 
-    #centrage du mesh
+    # center all the mesh
     x -= int(ncols/2)
     y -= int(nrows/2)
 
