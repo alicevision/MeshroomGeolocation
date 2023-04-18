@@ -58,12 +58,12 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             uid=[0],
             enabled=lambda node: 'custom' in node.method.value
         ),
-        desc.FloatParam(
+        desc.IntParam(
             name="kilometers",
             label="Bounding Box in kilometers",
             description="Bounding Box in kilometers",
             value=100,
-            range=(1, 1000),
+            range=(1, 1000, 1),
             uid=[0],
         ),
         desc.FloatParam(
@@ -71,15 +71,15 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             label="Scale",
             description="Scale of the map",
             value=0.2,
-            range=(0, 1),
+            range=(0.0, 1.0, 0.001),
             uid=[0],
         ),
         desc.FloatParam(
             name="verticalTranslation",
             label="Vertical translation",
             description="Vertical translation",
-            value=10,
-            range=(-100, 100),
+            value=10.0,
+            range=(-100.0, 100.0),
             uid=[0],
         ),
         desc.ChoiceParam(
