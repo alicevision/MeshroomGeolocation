@@ -50,7 +50,7 @@ This node allows to generate a mesh from .asc and .las file.
             label="Distance From Center (m)",
             description="Distance from center point (m)",
             value=200,
-            range=(50, 2000, 1.0), # should be more than 30, otherwise doesn't work
+            range=(50, 2000, 1),
             uid=[0],
         ),
         desc.ChoiceParam(
