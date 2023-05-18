@@ -37,6 +37,9 @@ Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
 
 All the pipelines will be available in Pipelines category in Meshroom UI. You can learn more about them [here](#pipelines).
 
+### Nota Bene
+LIDAR Data are from the IGN LIDAR HD project and it is still in progress. The CSV file with all the links of the tiles is unstable for now but you can update it by yourself. You can download the archive [here](https://pcrs.ign.fr/download/lidar/shp) and then just copy the file named "TA_diff_pkk_lidarhd.csv" in the folder external_files of the project.
+
 ## Features
 All nodes created by our team enable the following features :
 - **GetGPSData** : It permits to get average GPS data of the dataset. It's useful for all the other features.

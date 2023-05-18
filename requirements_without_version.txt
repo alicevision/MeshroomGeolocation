@@ -1,6 +1,6 @@
 geopandas
 geopy
-laspy
+laspy[lazrs,laszip]
 matplotlib
 meteostat
 numpy

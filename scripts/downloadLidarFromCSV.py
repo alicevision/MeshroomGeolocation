@@ -35,6 +35,7 @@ def download(Lambert93Data, OutputFolder):
 
     # Get the URL of the right tile
     URL = result[0].group(3)
+    logging.debug(f"URL of the right tile : {URL}")
     filename = os.path.basename(URL)
 
     logging.debug(f"Archive downloaded : {filename}")

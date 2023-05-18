@@ -1,6 +1,6 @@
 geopandas==0.12.2
 geopy==2.3.0
-laspy==2.3.0
+laspy[lazrs,laszip]==2.3.0
 matplotlib==3.5.1
 meteostat==1.6.5
 numpy==1.24.1

@@ -22,6 +22,9 @@ def buildArgumentParser() -> ArgumentParser:
     ap.add_argument("--outputObj", help="output obj", type=str)
     return ap
 
+# Agent header for the request
+agentheader = {'User-Agent': 'PostmanRuntime/7.28.4'}
+
 def coordinatesToUse(method, args):
     #what method of localisation
     if method == "auto":
@@ -48,7 +51,6 @@ def deg2num(lat_deg, lon_deg, zoom):
 def internetRequestOSM(xtile, ytile, zoom):
     # Request on OSM Buildings
     url = "https://data.osmbuildings.org/0.2/anonymous/tile/{0}/{1}/{2}.json".format(zoom, xtile, ytile) 
-    agentheader = {'User-Agent': 'PostmanRuntime/7.28.4'}
 
     response = requests.get(url,headers = agentheader)
     return json.loads(response.text)
@@ -68,7 +70,7 @@ def getPolygonsAndHeightsFromGeojson(geoJson):
     
     return buildings_geojson, heights_geojson
     
-def trimeshScene(buildings_mesh, heights, position_x, position_y):
+def trimeshScene(buildings_mesh, heights, position_x, position_y, scale):
     #add all mesh to a scene
     scene = trimesh.Scene()
 
@@ -81,11 +83,69 @@ def trimeshScene(buildings_mesh, heights, position_x, position_y):
         mesh.apply_transform(trimesh.transformations.rotation_matrix(np.deg2rad(180), [0, 1, 0]))
         mesh.apply_transform(trimesh.transformations.translation_matrix([-position_x, 0, position_y]))
 
-        # TODO : find a way to scale the mesh to the real world
-        mesh.apply_transform(trimesh.transformations.scale_matrix(2))
+        scale_matrix = np.diag([scale, scale*10, scale, 1])
+        mesh.apply_transform(scale_matrix)
         scene.add_geometry(mesh)
     
     return scene
+
+#convert longitude and latitude into distance in meters with Haversine method
+def haversine(lon1, lat1, lon2, lat2):
+    R = 6371000
+
+    lon1, lat1, lon2, lat2 = map(math.radians, [lon1, lat1, lon2, lat2])
+    delta_lon = lon2 - lon1
+    delta_lat = lat2 - lat1
+
+    a = math.sin(delta_lat / 2) ** 2 + math.cos(lat1) * math.cos(lat2) * math.sin(delta_lon / 2) ** 2
+    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
+    distance = R * c
+
+    return distance
+
+# download new zone
+def add_geojson(args, zoom, xtile, ytile):
+    new_data = json.loads(requests.get("https://data.osmbuildings.org/0.2/anonymous/tile/{0}/{1}/{2}.json".format(zoom, xtile, ytile), headers=agentheader).text)
+    
+    with open(args.geoJson) as f:
+        current_data = json.load(f)
+
+    current_data['features'].extend(new_data['features'])
+
+    with open(args.geoJson, 'w') as f:
+        json.dump(current_data, f)
+
+def add_data(args):
+    gdf = gpd.read_file(args.geoJson)
+
+    buildings_geojson_extended = []
+    heights_geojson_extended = []
+
+    for polygon in gdf[gdf.geometry.type == "Polygon"].geometry:
+        buildings_geojson_extended.append(Polygon(polygon.exterior.coords))
+        
+    for height in gdf.height:
+        heights_geojson_extended.append(height)
+    
+    max_x, max_y = 0, 0
+    for i in range(len(buildings_geojson_extended)):
+        if max(buildings_geojson_extended[i].exterior.coords.xy[0]) > max_x:
+            max_x = max(buildings_geojson_extended[i].exterior.coords.xy[0])
+        if max(buildings_geojson_extended[i].exterior.coords.xy[1]) > max_y:
+            max_y = max(buildings_geojson_extended[i].exterior.coords.xy[1])
+            
+    min_x, min_y = max_x, max_y
+    for i in range(len(buildings_geojson_extended)):
+        if min(buildings_geojson_extended[i].exterior.coords.xy[0]) < min_x:
+            min_x = min(buildings_geojson_extended[i].exterior.coords.xy[0])
+        if min(buildings_geojson_extended[i].exterior.coords.xy[1]) < min_y:
+            min_y = min(buildings_geojson_extended[i].exterior.coords.xy[1])
+            
+    buildings_geojson = buildings_geojson_extended
+    heights_geojson = heights_geojson_extended
+    
+    return buildings_geojson, heights_geojson
+
 
 def main():
     ap = buildArgumentParser()
@@ -111,7 +171,7 @@ def main():
     buildings_geojson, heights_geojson = getPolygonsAndHeightsFromGeojson(args.geoJson)
 
     # Convert the coordinates for the mesh
-    factor = 1000
+    factor = 10000
     max_heights = max(heights_geojson)
 
     buildings_mesh = []
@@ -123,6 +183,56 @@ def main():
             max_x = max(building.exterior.coords.xy[0])
         if max(building.exterior.coords.xy[1]) > max_y:
             max_y = max(building.exterior.coords.xy[1])
+
+    min_x, min_y = max_x, max_y
+    for i in range(len(buildings_geojson)):
+        if min(buildings_geojson[i].exterior.coords.xy[0]) < min_x:
+            min_x = min(buildings_geojson[i].exterior.coords.xy[0])
+        if min(buildings_geojson[i].exterior.coords.xy[1]) < min_y:
+            min_y = min(buildings_geojson[i].exterior.coords.xy[1])
+
+
+    # Calculate the distance between the min and max x and y
+    x_pos = haversine(min_x, location[0], location[1], location[0])
+    y_pos = haversine(location[1], min_y, location[1], location[0])
+
+    box_width = haversine(min_x, min_y, max_x, min_y)
+    box_height = haversine(min_x, min_y, min_x, max_y)
+
+    # Check if in the edges
+    on_left_edge = x_pos < box_width / 3
+    on_right_edge = x_pos > box_width * 2/3
+    on_bottom_edge = y_pos < box_height / 3
+    on_top_edge = y_pos > box_height * 2/3
+
+    # Detect which tiles are needed
+    if on_left_edge:
+        new_xtile = xtile - 1  
+        add_geojson(args, zoom, new_xtile, ytile)
+        if on_bottom_edge:
+            new_ytile = ytile + 1
+            add_geojson(args, zoom, new_xtile, new_ytile)
+        if on_top_edge:
+            new_ytile = ytile - 1
+            add_geojson(args, zoom, new_xtile, new_ytile)
+    if on_right_edge:
+        new_xtile = xtile + 1
+        add_geojson(args, zoom, new_xtile, ytile)
+        if on_bottom_edge:
+            new_ytile = ytile + 1
+            add_geojson(args, zoom, new_xtile, new_ytile)
+        if on_top_edge:
+            new_ytile = ytile - 1
+            add_geojson(args, zoom, new_xtile, new_ytile)
+    if on_top_edge:
+        new_ytile = ytile - 1
+        add_geojson(args, zoom, xtile, new_ytile)
+    if on_bottom_edge:
+        new_ytile = ytile + 1
+        add_geojson(args, zoom, xtile, new_ytile)
+
+    buildings_geojson, heights_geojson = add_data(args)
+
 
     #convert the coordinates of the buildings
     for building in buildings_geojson:
@@ -152,7 +262,10 @@ def main():
     position_y *= factor
     position_y = round(position_y, 3)
 
-    scene = trimeshScene(buildings_mesh, heights_geojson, position_x, position_y)
+    distance = haversine(min_x, min_y, max_x, max_y)
+    scale_factor = factor / distance
+
+    scene = trimeshScene(buildings_mesh, heights_geojson, position_x, position_y, scale_factor)
 
     #export the Obj
     with open(args.outputObj, 'w') as file:
@@ -161,8 +274,6 @@ def main():
             file_type='obj',
         )
         
-    #TODO si on est sur un bord de map, récupérer les maps autour, faire un paramètre
-
     logging.info("Buildings extruded generated")
 
 if __name__ == "__main__":
