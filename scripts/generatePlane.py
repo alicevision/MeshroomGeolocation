@@ -36,8 +36,3 @@ def generatePlane(TexturePath, OutputFolder, Output, distance):
             mtl_name=mtlPath.name,
             resolver=trimesh.visual.resolvers.FilePathResolver(mtlPath)
         )
-
-    #force add line to .obj because assimp doesn't read last line so miss a face
-    file = open(objPath, 'a+')
-    file.write('\n')
-    file.close()
