@@ -53,6 +53,7 @@ This node allows to get an HDRI file according to the weather at moment of datas
             label='Hdri result',
             description='hdri from weather folder',
             value=desc.Node.internalFolder+'hdri.exr',
+            semantic="image",
             uid=[],
         ),
     ]
