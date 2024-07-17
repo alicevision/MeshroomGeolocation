@@ -26,7 +26,7 @@ class MapBuildings(desc.CommandLineNode):
             label='GPS Coordinates Method',
             description='''Method to get the GPS coordinates''',
             value="auto",
-            values=("custom", "auto"),
+            values=["custom", "auto"],
             exclusive=True,
             uid=[0],
         ),

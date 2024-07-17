@@ -28,7 +28,7 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             label='GPS coordinates method',
             description='''GPS coordinates method''',
             value="auto",
-            values=("custom", "auto"),
+            values=["custom", "auto"],
             exclusive=True,
             uid=[0],
         ),
