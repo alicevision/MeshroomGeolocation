@@ -48,34 +48,43 @@ def convertDistanceToDecimalGPS(dist, lat, lon):
     return (south, north, east, west)
 
 def obtainRoads(center, distance, boolTexts, ax):
-    # Fetch OSM street network from the location
-    graph = ox.graph_from_point(center,dist=distance, dist_type="bbox")
+    try:
+        # Fetch OSM street network from the location
+        graph = ox.graph_from_point(center,dist=distance, dist_type="bbox")
 
-    # Retrieve nodes and edges
-    nodes, edges = ox.graph_to_gdfs(graph)
+        # Retrieve nodes and edges
+        nodes, edges = ox.graph_to_gdfs(graph)
 
-    # Plot street edges
-    edges.plot(ax=ax, edgecolor='#BC8F8F')
+        # Plot street edges
+        edges.plot(ax=ax, edgecolor='#BC8F8F')
 
-    if boolTexts:
-        for _, edge in ox.graph_to_gdfs(graph, nodes=False).fillna('').iterrows():
-            c = edge['geometry'].centroid
-            text = edge['name']
-            ax.annotate(text, (c.x, c.y), color="w", size=3)
+        if boolTexts:
+            for _, edge in ox.graph_to_gdfs(graph, nodes=False).fillna('').iterrows():
+                c = edge['geometry'].centroid
+                text = edge['name']
+                ax.annotate(text, (c.x, c.y), color="w", size=3)
+    except:
+        logging.info("No roads found")
 
 def obtainBuildings(center, distance, ax):
-    # Retrieve buildings
-    buildings = ox.geometries_from_point(center, tags={'building':True},dist=distance) 
+    try :
+        # Retrieve buildings
+        buildings = ox.features_from_point(center, tags={'building':True},dist=distance) 
 
-    # Plot buildings
-    buildings.plot(ax=ax, facecolor='khaki', alpha=0.7)
+        # Plot buildings
+        buildings.plot(ax=ax, facecolor='khaki', alpha=0.7)
+    except:
+        logging.info("No buildings found")
 
 def obtainWater(center, distance, ax):
-    # Retrieve water
-    water = ox.geometries_from_point(center, tags={'natural':"water"},dist=distance) 
+    try:
+        # Retrieve water
+        water = ox.features_from_point(center, tags={"natural":"water"},dist=distance) 
 
-    # Plot water
-    water.plot(ax=ax)
+        # Plot water
+        water.plot(ax=ax)
+    except:
+        logging.info("No water found")
 
 
 def Map2D(GPSData, distance, outputFolder, wantedLayers, roadsNameBool:str):
