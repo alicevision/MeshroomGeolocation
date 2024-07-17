@@ -1,5 +1,4 @@
 from argparse import ArgumentParser
-import data2D
 import generateNorth
 import logging
 import logLevel
@@ -20,11 +19,8 @@ def main():
     logging.basicConfig(level=logLevel.textToLogLevel(args.verboseLevel))
 
     logging.info("North !")
-    # get image to know where is the north
-    image = data2D.Map2D(args.GPSFile, args.outputFolder, 550)
-    logging.debug(f"Path of Image : {image}")
 
-    generateNorth.generateNorth(image, args.outputFolder, args.output)
+    generateNorth.generateNorth(args.outputFolder, args.outputPath)
 
     logging.info("North generated")
 

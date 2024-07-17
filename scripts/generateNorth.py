@@ -3,17 +3,12 @@ import trimesh
 import numpy as np
 from PIL import Image
 
-def generateNorth(ReferenceMap, OutputFolder, Output):
-    texturePath = Path(ReferenceMap).resolve()
-
+def generateNorth(OutputFolder, Output):
     parentPath = Path(__file__).parent.resolve()
     outputFolderPath = parentPath / OutputFolder
 
     outputFolderPath.mkdir( exist_ok=True)
     objPath = Output
-    mtlPath = outputFolderPath / 'texture.mtl'
-
-    image = Image.open(texturePath)
 
     triangle = trimesh.creation.cone(0.5, 2)
 
@@ -26,8 +21,7 @@ def generateNorth(ReferenceMap, OutputFolder, Output):
     triangle.apply_transform(rotation_matrix)
     triangle.apply_transform(translation_matrix)
 
-    triangle.visual = trimesh.visual.texture.TextureVisuals(image=image)
-    triangle.visual.material.name = "mapMat"
+    triangle.visual = trimesh.visual.color.ColorVisuals(mesh=triangle, vertex_colors=[255, 0, 0, 255])
 
 
     # export the triangle to an obj file
@@ -35,12 +29,5 @@ def generateNorth(ReferenceMap, OutputFolder, Output):
         triangle.export(
             file,
             file_type='obj',
-            include_texture=True,
-            mtl_name=mtlPath.name,
-            resolver=trimesh.visual.resolvers.FilePathResolver(mtlPath)
+            include_texture=True
         )
-
-    #force add line to .obj because assimp doesn't read last line so miss a face
-    file = open(objPath, 'a+')
-    file.write('\n')
-    file.close()
