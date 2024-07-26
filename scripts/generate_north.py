@@ -1,14 +1,14 @@
 from pathlib import Path
 import trimesh
 import numpy as np
-from PIL import Image
 
-def generateNorth(OutputFolder, Output):
-    parentPath = Path(__file__).parent.resolve()
-    outputFolderPath = parentPath / OutputFolder
+def generate_north(output_folder, output):
+    '''Generate the cone pointing north and save it in the output folder as an obj file'''
+    parent_path = Path(__file__).parent.resolve()
+    output_folder_path = parent_path / output_folder
 
-    outputFolderPath.mkdir( exist_ok=True)
-    objPath = Output
+    output_folder_path.mkdir(exist_ok=True)
+    obj_path = output
 
     triangle = trimesh.creation.cone(0.5, 2)
 
@@ -25,7 +25,7 @@ def generateNorth(OutputFolder, Output):
 
 
     # export the triangle to an obj file
-    with open(objPath, 'w') as file:
+    with open(obj_path, 'w') as file:
         triangle.export(
             file,
             file_type='obj',

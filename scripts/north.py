@@ -1,26 +1,26 @@
 from argparse import ArgumentParser
-import generateNorth
 import logging
-import logLevel
+import generate_north
+import log_level
 
-# Parsing of all arguments
-def buildArgumentParser() -> ArgumentParser:
-    ap = ArgumentParser()
-    ap.add_argument("--GPSFile", help="GPSFile", type=str)
-    ap.add_argument("--outputPath", help="output", type=str)
-    ap.add_argument("--verboseLevel", help="verbose level for logging", type=str)
-    ap.add_argument("--outputFolder", help="outputFolder", type=str)
-    return ap
+def build_argument_parser() -> ArgumentParser:
+    '''Parsing of all arguments'''
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument("--GPSFile", help="GPSFile", type=str)
+    argument_parser.add_argument("--outputPath", help="output", type=str)
+    argument_parser.add_argument("--verboseLevel", help="verbose level for logging", type=str)
+    argument_parser.add_argument("--outputFolder", help="outputFolder", type=str)
+    return argument_parser
 
 def main():
-    ap = buildArgumentParser()
-    args = ap.parse_args()
+    args = build_argument_parser()
+    args = args.parse_args()
 
-    logging.basicConfig(level=logLevel.textToLogLevel(args.verboseLevel))
+    logging.basicConfig(level=log_level.text_to_log_level(args.verboseLevel))
 
     logging.info("North !")
 
-    generateNorth.generateNorth(args.outputFolder, args.outputPath)
+    generate_north.generate_north(args.outputFolder, args.outputPath)
 
     logging.info("North generated")
 
