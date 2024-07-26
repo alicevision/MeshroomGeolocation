@@ -1,9 +1,7 @@
 __version__ = "1.2"
 
-from meshroom.core import desc
-
 import json
-import logging
+from meshroom.core import desc
 
 class GetGPSData(desc.Node):
     category = 'Geolocation'
@@ -19,6 +17,15 @@ This node allows to get GPS coordinates of a file.
             value= "",
             uid=[0],
         ),
+        desc.ChoiceParam(
+            name='verboseLevel',
+            label='Verbose Level',
+            description='''verbosity level (critical, error, warning, info, debug).''',
+            value='info',
+            values=['critical', 'error', 'warning', 'info', 'debug'],
+            exclusive=True,
+            uid=[],
+        ),
     ]
 
     outputs = [
@@ -33,13 +40,13 @@ This node allows to get GPS coordinates of a file.
 
     def processChunk(self, chunk):
         try:
-            logging.basicConfig(level=logging.INFO)
-            logging.info("GPS")
+            chunk.logManager.start(chunk.node.verboseLevel.value)
+            chunk.logger.info("GPS")
 
             # Opening JSON file
-            with open(chunk.node.inputFile.value, 'r') as inputfile:
+            with open(chunk.node.inputFile.value, 'r') as inputFile:
                 # Reading from json file
-                json_object = json.load(inputfile)
+                jsonObject = json.load(inputFile)
 
 
             # Create all needed variables
@@ -51,27 +58,27 @@ This node allows to get GPS coordinates of a file.
             decLon	= []
             latitudeSum = 0
             longitudeSum = 0
-            
 
-            for i in range(len(json_object["views"])):
-            	#get the value of lat & long
-                latitude.append(json_object["views"][i]["metadata"]["GPS:Latitude"])
-                latitudeRef.append(json_object["views"][i]["metadata"]["GPS:LatitudeRef"])
 
-                longitude.append(json_object["views"][i]["metadata"]["GPS:Longitude"])
-                longitudeRef.append(json_object["views"][i]["metadata"]["GPS:LongitudeRef"])
-                
-            	#get the separation between Degree, Minute, Seconde
+            for i in range(len(jsonObject["views"])):
+            	# Get the value of lat & long
+                latitude.append(jsonObject["views"][i]["metadata"]["GPS:Latitude"])
+                latitudeRef.append(jsonObject["views"][i]["metadata"]["GPS:LatitudeRef"])
+
+                longitude.append(jsonObject["views"][i]["metadata"]["GPS:Longitude"])
+                longitudeRef.append(jsonObject["views"][i]["metadata"]["GPS:LongitudeRef"])
+
+            	# Get the separation between Degree, Minute, Seconde
                 latPoint = [float(x) for x in latitude[i].split(", ")]
                 lonPoint = [float(x) for x in longitude[i].split(", ")]
 
-            	# convert degrees to decimal
+            	# Convert degrees to decimal
             	# Decimal degrees = Degrees + (Minutes/60) + (Seconds/3600)
                 decLat.append(latPoint[0] + (latPoint[1]/60) + (latPoint[2]/3600))
                 # If north keep the same, otherwise it has to be negative value
                 if latitudeRef[i] != "N" :
                     decLat[i]=-decLat[i]
-                
+
                 decLon.append(lonPoint[0] + (lonPoint[1]/60) + (lonPoint[2]/3600))
                 if longitudeRef[i] != "E" :
                     decLon[i] = -decLon[i]
@@ -79,11 +86,11 @@ This node allows to get GPS coordinates of a file.
             # Sum of all latitudes
             for i in range(len(latitude)):
                 latitudeSum += decLat[i]
-            
+
             # Sum of all longitudes
             for i in range(len(longitude)):
                 longitudeSum += decLon[i]
-                
+
             # Average of latitude and longitude
             latitudeAvg = latitudeSum / len(latitude)
             longitudeAvg = longitudeSum / len(longitude)
@@ -94,12 +101,15 @@ This node allows to get GPS coordinates of a file.
                 "longitude": longitudeAvg
             }
 
+            chunk.logger.debug("Output: " + str(output))
+
             # Serializing json
-            json_object = json.dumps(output, indent=4)
-            
+            jsonObject = json.dumps(output, indent=4)
+
             # Writing to sample.json
             with open(chunk.node.output.value, "w") as outfile:
-                outfile.write(json_object)
+                outfile.write(jsonObject)
 
+            chunk.logger.info("GPS coordinates saved!")
         finally:
             chunk.logManager.end()
