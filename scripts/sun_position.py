@@ -2,10 +2,11 @@ import math
 import json
 
 def sunpos(when, location, refraction):
-# Extract the passed data
+    # Extract the passed data
     year, month, day, hour, minute, second, timezone = when
     latitude, longitude = location
-# Math typing shortcuts
+
+    # Math typing shortcuts
     rad, deg = math.radians, math.degrees
     sin, cos, tan = math.sin, math.cos, math.tan
     asin, atan2 = math.asin, math.atan2
@@ -72,7 +73,7 @@ def getSunPosition3DEnv(GPSFile, TimeData):
     with open(GPSFile, 'r') as inputfile:
         # Reading from json file
         json_object = json.load(inputfile)
-    
+
     latitude = json_object["latitude"]
     longitude = json_object["longitude"]
 
@@ -110,5 +111,5 @@ def getSunPosition3DEnv(GPSFile, TimeData):
         "elevation": elevation,
         "earthSun": resultEarthSunDistance,
         "heightFromSun": resultFloorDistance,
-        "pointSun": resultDistance 
+        "pointSun": resultDistance
     }

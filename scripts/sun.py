@@ -1,34 +1,34 @@
-import getTimeDataset
-import sunPosition
 from argparse import ArgumentParser
-import generateSun
 import logging
-import logLevel
+import getTimeDataset
+import sun_position
+import generateSun
+import log_level
 
-# Parsing of all arguments
-def buildArgumentParser() -> ArgumentParser:
-    ap = ArgumentParser()
-    ap.add_argument("--inputFile", help="input SFM data", type=str)
-    ap.add_argument("--GPSFile", help="GPS file", type=str)
-    ap.add_argument("--verboseLevel", help="verbose level for logging", type=str)
-    ap.add_argument("--outputPath", help="output path", type=str)
-    ap.add_argument("--outputFolder", help="output folder", type=str)
-    return ap
+def build_argument_parser() -> ArgumentParser:
+    '''Parsing of all arguments'''
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument("--inputFile", help="input SFM data", type=str)
+    argument_parser.add_argument("--GPSFile", help="GPS file", type=str)
+    argument_parser.add_argument("--verboseLevel", help="verbose level for logging", type=str)
+    argument_parser.add_argument("--outputPath", help="output path", type=str)
+    argument_parser.add_argument("--outputFolder", help="output folder", type=str)
+    return argument_parser
 
 def main():
-    ap = buildArgumentParser()
-    args = ap.parse_args()
+    args = build_argument_parser()
+    args = args.parse_args()
 
-    logging.basicConfig(level=logLevel.textToLogLevel(args.verboseLevel))
+    logging.basicConfig(level=log_level.text_to_log_level(args.verboseLevel))
 
     logging.info("Sun!")
     time = getTimeDataset.timeOfDataset(args.inputFile, args.GPSFile)
-    logging.debug(f"Time of Dataset : {time}")
+    logging.debug("Time of Dataset: %s", time)
 
-    sunPos = sunPosition.getSunPosition3DEnv(args.GPSFile, time)
-    logging.debug(f"Sun position : {sunPos}")
+    position = sun_position.getSunPosition3DEnv(args.GPSFile, time)
+    logging.debug("Sun position: %s", position)
 
-    generateSun.generateSun(args.outputFolder, sunPos)
+    generateSun.generateSun(args.outputFolder, position)
 
     logging.info("Sun generated")
 
