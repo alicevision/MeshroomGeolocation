@@ -1,9 +1,15 @@
 __version__ = "1.2"
 
-from meshroom.core import desc
 import os
 from pathlib import Path
-class WeatherHDRI(desc.CommandLineNode):
+
+from meshroom.core import desc
+from meshroom.core.plugin import PluginCommandLineNode, EnvType
+class WeatherHDRI(PluginCommandLineNode):
+    # Plugin Infos
+    envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
