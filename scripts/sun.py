@@ -1,6 +1,6 @@
 from argparse import ArgumentParser
 import logging
-import getTimeDataset
+import get_time_dataset
 import sun_position
 import generateSun
 import log_level
@@ -22,7 +22,7 @@ def main():
     logging.basicConfig(level=log_level.text_to_log_level(args.verboseLevel))
 
     logging.info("Sun!")
-    time = getTimeDataset.timeOfDataset(args.inputFile, args.GPSFile)
+    time = get_time_dataset.time_of_dataset(args.inputFile, args.GPSFile)
     logging.debug("Time of Dataset: %s", time)
 
     position = sun_position.getSunPosition3DEnv(args.GPSFile, time)
