@@ -1,9 +1,15 @@
 __version__ = "1.2"
 
-from meshroom.core import desc
 import os
 from pathlib import Path
-class TopographyMap3D(desc.CommandLineNode):
+
+from meshroom.core import desc
+from meshroom.core.plugin import PluginCommandLineNode, EnvType
+class TopographyMap3D(PluginCommandLineNode):
+    # Plugin Infos
+    envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
@@ -88,13 +94,13 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             label='Output',
             description='''Output.''',
             value= desc.Node.internalFolder + "result.obj",
-            uid=[0],
+            uid=[],
         ),
         desc.File(
             name='outputFolder',
             label='Output Folder',
             description='''Output Folder''',
             value= desc.Node.internalFolder,
-            uid=[0],
+            uid=[],
         ),
     ]
