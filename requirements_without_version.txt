@@ -1,4 +1,4 @@
-geopandas
+# geopandas # used by OSMBuildings
 geopy
 laspy[lazrs,laszip]
 matplotlib
@@ -11,6 +11,6 @@ pyproj
 python_dateutil
 rasterio
 requests
-shapely
+# shapely # used by OSMBuildings
 timezonefinder
 trimesh
