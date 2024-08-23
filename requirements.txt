@@ -3,7 +3,7 @@ geopy==2.4.1
 laspy[lazrs,laszip]==2.5.4
 matplotlib==3.9.1
 meteostat==1.6.8
-numpy==2.0.0
+numpy==1.26.4 # breaks with 2.0.0 in grid_sampling in map_to_mesh
 osmnx==1.9.3
 Pillow==10.4.0
 py7zr==0.21.1

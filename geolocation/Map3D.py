@@ -1,9 +1,15 @@
 __version__ = "1.2"
 
-from meshroom.core import desc
 import os
 from pathlib import Path
-class Map3D(desc.CommandLineNode):
+
+from meshroom.core import desc
+from meshroom.core.plugin import PluginCommandLineNode, EnvType
+class Map3D(PluginCommandLineNode):
+    # Plugin Infos
+    envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
@@ -26,15 +32,6 @@ This node allows to get 3D map of where is the dataset.
             description='''GPS coordinates file.''',
             value= "",
             uid=[0],
-        ),
-        desc.ChoiceParam(
-            name='resolution',
-            label='Resolution (meters)',
-            description='''Resolution of the mesh.''',
-            value=25,
-            values=[0.30, 1, 5, 25],
-            exclusive=True,
-            uid=[],
         ),
         desc.ChoiceParam(
             name='verboseLevel',

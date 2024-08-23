@@ -1,9 +1,15 @@
 __version__ = "1.2"
 
-from meshroom.core import desc
 import os
 from pathlib import Path
-class Mesh3D(desc.CommandLineNode):
+
+from meshroom.core import desc
+from meshroom.core.plugin import PluginCommandLineNode, EnvType
+class Mesh3D(PluginCommandLineNode):
+    # Plugin Infos
+    envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
@@ -41,14 +47,14 @@ This node allows to generate a mesh from .asc and .las file.
             value='voxel',
             values=['voxel', 'delaunay'],
             exclusive=True,
-            uid=[],
+            uid=[0],
             ),
         desc.IntParam(
             name="dist",
             label="Distance From Center (m)",
             description="Distance from center point (m)",
             value=200,
-            range=(50, 2000, 1),
+            range=(50, 500, 1),
             uid=[0],
         ),
         desc.ChoiceParam(
@@ -68,6 +74,6 @@ This node allows to generate a mesh from .asc and .las file.
             label='OBJ from File',
             description='''OBJ from File''',
             value= desc.Node.internalFolder + "mesh.obj",
-            uid=[0],
+            uid=[],
         ),
     ]
