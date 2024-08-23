@@ -1,29 +1,29 @@
 {
     "header": {
         "pipelineVersion": "2.2",
-        "releaseVersion": "2021.1.0",
+        "releaseVersion": "2024.1.0-develop",
         "fileVersion": "1.1",
         "template": true,
         "nodesVersions": {
-            "GetGPSData": "1.2",
-            "CameraInit": "9.0",
-            "WeatherHDRI": "1.2"
+            "CameraInit": "11.0",
+            "GetGPSData": "2.0",
+            "WeatherHDRI": "2.0"
         }
     },
     "graph": {
         "CameraInit_1": {
             "nodeType": "CameraInit",
             "position": [
-                2736,
-                -88
+                0,
+                0
             ],
             "inputs": {}
         },
         "GetGPSData_1": {
             "nodeType": "GetGPSData",
             "position": [
-                2961,
-                -91
+                200,
+                0
             ],
             "inputs": {
                 "inputFile": "{CameraInit_1.output}"
@@ -32,8 +32,8 @@
         "WeatherHDRI_1": {
             "nodeType": "WeatherHDRI",
             "position": [
-                3228,
-                -88
+                400,
+                0
             ],
             "inputs": {
                 "inputFile": "{GetGPSData_1.inputFile}",
