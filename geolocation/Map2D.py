@@ -4,12 +4,13 @@ import os
 from pathlib import Path
 
 from meshroom.core import desc
-from meshroom.core.plugin import PluginCommandLineNode, EnvType
+from meshroom.core.utils import VERBOSE_LEVEL
+# from meshroom.core.plugin import EnvType
 
-class Map2D(PluginCommandLineNode):
-    # Plugin Infos
-    envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
-    envType = EnvType.VENV
+class Map2D(desc.CommandLineNode):
+    # Plugin Infos for the Plugin System
+    # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    # envType = EnvType.VENV
 
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
@@ -32,7 +33,6 @@ This node allows to get 2D map of where is the dataset.
             label='GPS coordinates file',
             description='''GPS coordinates contained in JSON file.''',
             value= "",
-            uid=[0],
         ),
         desc.IntParam(
             name="dist",
@@ -40,7 +40,6 @@ This node allows to get 2D map of where is the dataset.
             description="Distance from input point to get image.",
             value=550,
             range=(250, 2000, 250),
-            uid=[0],
         ),
         desc.ChoiceParam(
             name='layersWanted',
@@ -49,7 +48,6 @@ This node allows to get 2D map of where is the dataset.
             value=['boolBuildings'],
             values=['boolBuildings', 'boolRoads', 'boolWater'],
             exclusive=False,
-            uid=[0],
             joinChar=',',
         ),
         desc.BoolParam(
@@ -58,16 +56,14 @@ This node allows to get 2D map of where is the dataset.
             description='Name of roads.',
             value=False,
             enabled=lambda node: 'boolRoads' in node.layersWanted.value,
-            uid=[0],
         ),
         desc.ChoiceParam(
             name='verboseLevel',
             label='Verbose Level',
             description='''verbosity level (critical, error, warning, info, debug).''',
             value='info',
-            values=['critical', 'error', 'warning', 'info', 'debug'],
+            values=VERBOSE_LEVEL,
             exclusive=True,
-            uid=[],
         ),
     ]
 
@@ -77,13 +73,11 @@ This node allows to get 2D map of where is the dataset.
             label='Output',
             description='''Output''',
             value=desc.Node.internalFolder + "map2D.obj",
-            uid=[],
         ),
         desc.File(
             name='outputFolder',
             label='Output Folder',
             description='''Output Folder''',
             value=desc.Node.internalFolder,
-            uid=[],
         ),
     ]

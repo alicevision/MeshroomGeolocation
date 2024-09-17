@@ -24,13 +24,6 @@ cd MeshroomGeolocation
 pip install -r requirements.txt
 ```
 
-## Plugin System
-Since recently a plugin system has been added to Meshroom.
-
-You can add your plugin from the local cloned folder or from the URL. Just by going in File > Advanced > Install Plugin...
-
-If you are using the local installation you'll need a __init__.py file and a meshroomPlugin.json file. It is really important to mention the "pluginName" and the "nodesFolder" to be sure everything will be found.
-
 ## Environment variables
 Custom nodes can be added to Meshroom by setting the environment variable `MESHROOM_NODES_PATH`.
 
@@ -43,6 +36,13 @@ Custom pipelines can be added to Meshroom by setting the environment variable `M
 Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
 
 All the pipelines will be available in Pipelines category in Meshroom UI. You can learn more about them [here](#pipelines).
+
+## Plugin System
+Since recently a plugin system has been added to Meshroom.
+
+You can add your plugin from the local cloned folder or from the URL. Just by going in File > Advanced > Install Plugin...
+
+If you are using the local installation you'll need a __init__.py file and a meshroomPlugin.json file. It is really important to mention the "pluginName" and the "nodesFolder" to be sure everything will be found.
 
 ### Nota Bene
 LIDAR Data are from the IGN LIDAR HD project and it is still in progress. The CSV file with all the links of the tiles is unstable for now but you can update it by yourself. You can download the archive [here](https://storage.sbg.cloud.ovh.net/v1/AUTH_63234f509d6048bca3c9fd7928720ca1/ppk-lidar/) and then download the "TA_yyyy_mm_dd.zip" and convert the "TA_diff_pkk_lidarhd.dbf" in CSV file (through Excel for example) in the folder external_files of the project.

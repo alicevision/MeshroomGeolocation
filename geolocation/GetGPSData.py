@@ -2,6 +2,7 @@ __version__ = "2.0"
 
 import json
 from meshroom.core import desc
+from meshroom.core.utils import VERBOSE_LEVEL
 
 class GetGPSData(desc.Node):
     category = 'Geolocation'
@@ -15,16 +16,14 @@ This node allows to get GPS coordinates of a file.
             label='SfMData',
             description='''input SfMData.''',
             value= "",
-            uid=[0],
         ),
         desc.ChoiceParam(
             name='verboseLevel',
             label='Verbose Level',
             description='''verbosity level (critical, error, warning, info, debug).''',
             value='info',
-            values=['critical', 'error', 'warning', 'info', 'debug'],
+            values=VERBOSE_LEVEL,
             exclusive=True,
-            uid=[],
         ),
     ]
 
@@ -34,7 +33,6 @@ This node allows to get GPS coordinates of a file.
             label='GPS coordinates',
             description='GPS coordinates from input file',
             value=desc.Node.internalFolder + "gps.json",
-            uid=[],
         ),
     ]
 

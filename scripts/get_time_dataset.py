@@ -33,7 +33,14 @@ def time_of_dataset(sfm_data, gps_data):
         start_date = start_date.replace(tzinfo = from_zone)
         local = start_date.astimezone(to_zone)
         local = list(str(local.utcoffset()).split(':'))
-        offset_time = int(local[0])
+        # if first element contains "day", multiply by 24
+        if "day" in local[0]:
+            local[0] = local[0].replace("day", "")
+            day = local[0].split(",")[0]
+            hour = local[0].split(",")[1]
+            offset_time = int(day) * 24 + int(hour)
+        else:
+            offset_time = int(local[0])
 
     date = date.replace(" ", ":")
 

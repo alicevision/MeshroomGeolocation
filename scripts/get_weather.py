@@ -1,5 +1,6 @@
 from datetime import datetime
 import json
+import math
 from meteostat import Point, Hourly
 
 def get_weather(gps_data, time_data):
@@ -31,6 +32,9 @@ def get_weather(gps_data, time_data):
     # Get Weather Hourly data from the coordinates
     data = Hourly(location, ymd, ymd)
     data = data.fetch()
+
+    if math.isnan(data['coco'][0]) or math.isnan(data['temp'][0]) or math.isnan(data['rhum'][0]) or math.isnan(data['wdir'][0]) or math.isnan(data['wspd'][0]):
+        raise ValueError("No weather data found")
 
     # Data to return
     return {
