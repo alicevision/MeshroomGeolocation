@@ -4,15 +4,13 @@
 
 [Meshroom](https://alicevision.org/#meshroom) is a 3D Reconstruction Software using Photogrammetry.
 
-Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in its geographical context. From the GPS data of your camera you can create and export 2D Map, 2D Map with extruded buildings, elevation and 3D map. 
+Meshroom Geoloc is a group of nodes using the GPS data of the pictures to geolocate and replace the object in its geographical context. From the GPS data of your camera you can create and export 2D Map, elevation and 3D map. 
 
 {Worldwide} The 2D map uses Open Street Map and Worldwide data. 
 
-{Worldwide} The 2D map with buildings uses Open Street Map Buildings.
-
 {Worldwide} The elevation map comes from NASA Data with a resolution of 30 meters.
 
-{France}    The 3D map comes from IGN (The french geographical institute) with a resolution of 25 meters, 5 meters, 1 meter and 30 centimeters for the Lidar HD program.
+{France}    The 3D map comes from IGN (The french geographical institute) with a resolution of 30 centimeters for the Lidar HD program.
 
 ## Install
 It is a module for [Meshroom](https://alicevision.org/#meshroom).
@@ -25,6 +23,8 @@ git clone --recursive https://github.com/alicevision/MeshroomGeolocation.git
 cd MeshroomGeolocation
 pip install -r requirements.txt
 ```
+
+## Environment variables
 Custom nodes can be added to Meshroom by setting the environment variable `MESHROOM_NODES_PATH`.
 
 Here `MESHROOM_NODES_PATH = path/to/MeshroomGeolocation`.
@@ -37,18 +37,24 @@ Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
 
 All the pipelines will be available in Pipelines category in Meshroom UI. You can learn more about them [here](#pipelines).
 
+## Plugin System
+Since recently a plugin system has been added to Meshroom.
+
+You can add your plugin from the local cloned folder or from the URL. Just by going in File > Advanced > Install Plugin...
+
+If you are using the local installation you'll need a __init__.py file and a meshroomPlugin.json file. It is really important to mention the "pluginName" and the "nodesFolder" to be sure everything will be found.
+
 ### Nota Bene
-LIDAR Data are from the IGN LIDAR HD project and it is still in progress. The CSV file with all the links of the tiles is unstable for now but you can update it by yourself. You can download the archive [here](https://pcrs.ign.fr/download/lidar/shp) and then just copy the file named "TA_diff_pkk_lidarhd.csv" in the folder external_files of the project.
+LIDAR Data are from the IGN LIDAR HD project and it is still in progress. The CSV file with all the links of the tiles is unstable for now but you can update it by yourself. You can download the archive [here](https://storage.sbg.cloud.ovh.net/v1/AUTH_63234f509d6048bca3c9fd7928720ca1/ppk-lidar/) and then download the "TA_yyyy_mm_dd.zip" and convert the "TA_diff_pkk_lidarhd.dbf" in CSV file (through Excel for example) in the folder external_files of the project.
 
 ## Features
 All nodes created by our team enable the following features :
 - **GetGPSData** : It permits to get average GPS data of the dataset. It's useful for all the other features.
 - **Map2D** : With this node, you can obtain a 2D map based on [Open Street Map](https://www.openstreetmap.fr/) data. It has several layers of information and a minimal radius precision of 30m.
-- **MapBuildings** : The map obtained with this node shows the buildings extruded. It is also based on Open Street Map data.
-- **TopographyMap3D** : As we have 2D and 2.5D, this node is good for a worldwide 3D map. It is based on data from NASA.
-- **Map3D** : With this node, a 3D map can be generated, based on IGN data so it's only available for France. Different resolutions can be chosen between 30cm, 1m, 5m and 25m. Corresponding data are downloaded but needs a treatment (Merge and Mesh3D).
-- **Merge** : A folder that contains .las or .asc files are merged into a single file to then generate a mesh.
-- **Mesh3D** : After treatment, lidar file or ASCII file generates a 3D mesh.
+- **TopographyMap3D** : As we have 2D, this node is good for a worldwide 3D map. It is based on data from NASA.
+- **Map3D** : With this node, a 3D map can be generated, based on IGN data so it's only available for France for a 30 centimeters resolution. Data are downloaded but needs a treatment (Mesh3D).
+- **Merge** : A folder that contains .copc.laz files are merged into a single file to then generate a mesh.
+- **Mesh3D** : After treatment, lidar file generates a 3D mesh.
 - **North** : As north is not indicated on the maps generated, this node places it as a cone.
 - **WeatherHDRI** : As sometimes weather information is needed, HDRI of the current weather of the dataset is downloaded.
 - **Sun** : The position of the sun according when the dataset was taken is calculated with this node and represented as a big yellow sphere.
@@ -71,10 +77,6 @@ Here are screenshots of them :
 - **Generate Weather H D R I** is also a simple node with an HDRI downloaded for the weather during the dataset.
 
 ![Weather pipeline](./external_files/weather_pipeline.png)
-
-- **Generate Map Buildings** is like for the map 2d, but instead with extruded buildings.
-
-![Buildings pipeline](./external_files/map2d5_pipeline.png)
 
 - **Generate_3D Map** is a longer pipeline to obtain a detailed 3d map (only available in France for now).
 

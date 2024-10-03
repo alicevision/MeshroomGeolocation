@@ -1,26 +1,26 @@
 from argparse import ArgumentParser
-import generatePlane
 import logging
+import generate_plane
 import data2D
-import logLevel
+import log_level
 
-# Parsing of all arguments
-def buildArgumentParser() -> ArgumentParser:
-    ap = ArgumentParser()
-    ap.add_argument("--GPSFile", help="GPS JSON file", type=str)
-    ap.add_argument("--dist", help="distance from center point", type=str)
-    ap.add_argument("--layersWanted", help="layers wanted for 2d map", type=str)
-    ap.add_argument("--roadsName", help="boolean for name of roads", type=str)
-    ap.add_argument("--verboseLevel", help="verbose level for logging", type=str)
-    ap.add_argument("--outputPath", help="output file path", type=str)
-    ap.add_argument("--outputFolder", help="output folder path", type=str)
-    return ap
+def build_argument_parser() -> ArgumentParser:
+    '''Builds the argument parser for the script'''
+    argument_parser = ArgumentParser()
+    argument_parser.add_argument("--GPSFile", help="GPS JSON file", type=str)
+    argument_parser.add_argument("--dist", help="distance from center point", type=str)
+    argument_parser.add_argument("--layersWanted", help="layers wanted for 2d map", type=str)
+    argument_parser.add_argument("--roadsName", help="boolean for name of roads", type=str)
+    argument_parser.add_argument("--verboseLevel", help="verbose level for logging", type=str)
+    argument_parser.add_argument("--outputPath", help="output file path", type=str)
+    argument_parser.add_argument("--outputFolder", help="output folder path", type=str)
+    return argument_parser
 
 def main():
-    ap = buildArgumentParser()
-    args = ap.parse_args()
+    args = build_argument_parser()
+    args = args.parse_args()
 
-    logging.basicConfig(level=logLevel.textToLogLevel(args.verboseLevel))
+    logging.basicConfig(level=log_level.text_to_log_level(args.verboseLevel))
 
     logging.info("2D Map !")
 
@@ -29,7 +29,7 @@ def main():
     logging.debug(f"Path of Image : {image}")
 
     # Create plane with texture that has been created
-    generatePlane.generatePlane(image, args.outputFolder, args.outputPath, args.dist)
+    generate_plane.generate_plane(image, args.outputFolder, args.outputPath, args.dist)
 
     logging.info("2D Map generated")
 

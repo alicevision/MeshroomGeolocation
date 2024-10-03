@@ -1,8 +1,7 @@
-from __future__ import print_function
-
-__version__ = "1.2"
+__version__ = "2.0"
 
 from meshroom.core import desc
+from meshroom.core.utils import VERBOSE_LEVEL
 import os
 from pathlib import Path
 class Merge(desc.CommandLineNode):
@@ -27,23 +26,20 @@ This node allows to merge files to one File.
             label='Folder',
             description='''Folder''',
             value= "",
-            uid=[0],
         ),
         desc.File(
             name='GPSFile',
             label='GPS File',
             description='''GPS file''',
             value= "",
-            uid=[0],
         ),
         desc.ChoiceParam(
             name='verboseLevel',
             label='Verbose Level',
             description='''verbosity level (critical, error, warning, info, debug).''',
             value='info',
-            values=['critical', 'error', 'warning', 'info', 'debug'],
+            values=VERBOSE_LEVEL,
             exclusive=True,
-            uid=[],
         ),
     ]
 
@@ -53,6 +49,5 @@ This node allows to merge files to one File.
             label='Output Folder',
             description='''Output folder.''',
             value= desc.Node.internalFolder,
-            uid=[0],
         ),
     ]

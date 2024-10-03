@@ -1,22 +1,23 @@
 from datetime import datetime
-from meteostat import Point, Hourly
 import json
+import math
+from meteostat import Point, Hourly
 
-def getWeather(GPSData, TimeData):
+def get_weather(gps_data, time_data):
     # Opening JSON file
-    with open(GPSData, 'r') as inputfile:
+    with open(gps_data, 'r') as inputfile:
         # Reading from json file
         json_object = json.load(inputfile)
 
     latitude = json_object["latitude"]
-    longitude = json_object["longitude"]    
+    longitude = json_object["longitude"]
 
     # get date
-    time = TimeData["datetime"]
+    time = time_data["datetime"]
 
     #add jet lag to time
-    offsetTime = TimeData["offsetTime"]
-    time.append(offsetTime)
+    offset_time = time_data["offsetTime"]
+    time.append(offset_time)
 
     datefile = tuple(int(element) for element in time)
 
@@ -31,6 +32,9 @@ def getWeather(GPSData, TimeData):
     # Get Weather Hourly data from the coordinates
     data = Hourly(location, ymd, ymd)
     data = data.fetch()
+
+    if math.isnan(data['coco'][0]) or math.isnan(data['temp'][0]) or math.isnan(data['rhum'][0]) or math.isnan(data['wdir'][0]) or math.isnan(data['wspd'][0]):
+        raise ValueError("No weather data found")
 
     # Data to return
     return {

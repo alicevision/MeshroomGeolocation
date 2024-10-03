@@ -1,11 +1,16 @@
-from __future__ import print_function
+__version__ = "2.0"
 
-__version__ = "1.2"
-
-from meshroom.core import desc
 import os
 from pathlib import Path
+
+from meshroom.core import desc
+from meshroom.core.utils import VERBOSE_LEVEL
+# from meshroom.core.plugin import EnvType
 class Mesh3D(desc.CommandLineNode):
+    # Plugin Infos for the Plugin System
+    # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    # envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
@@ -27,14 +32,12 @@ This node allows to generate a mesh from .asc and .las file.
             label='Folder',
             description='''Folder''',
             value= "",
-            uid=[0],
         ),
         desc.File(
             name='GPSFile',
             label='GPS Coordinates',
             description='''GPS coordinates''',
             value= "",
-            uid=[0],
         ),
         desc.ChoiceParam(
             name='MeshMethod',
@@ -43,24 +46,21 @@ This node allows to generate a mesh from .asc and .las file.
             value='voxel',
             values=['voxel', 'delaunay'],
             exclusive=True,
-            uid=[],
             ),
         desc.IntParam(
             name="dist",
             label="Distance From Center (m)",
             description="Distance from center point (m)",
             value=200,
-            range=(50, 2000, 1),
-            uid=[0],
+            range=(50, 500, 1),
         ),
         desc.ChoiceParam(
             name='verboseLevel',
             label='Verbose Level',
             description='''verbosity level (critical, error, warning, info, debug).''',
             value='info',
-            values=['critical', 'error', 'warning', 'info', 'debug'],
+            values=VERBOSE_LEVEL,
             exclusive=True,
-            uid=[],
         ),
     ]
 
@@ -70,6 +70,5 @@ This node allows to generate a mesh from .asc and .las file.
             label='OBJ from File',
             description='''OBJ from File''',
             value= desc.Node.internalFolder + "mesh.obj",
-            uid=[0],
         ),
     ]

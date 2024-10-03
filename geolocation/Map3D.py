@@ -1,11 +1,16 @@
-from __future__ import print_function
+__version__ = "2.0"
 
-__version__ = "1.2"
-
-from meshroom.core import desc
 import os
 from pathlib import Path
+
+from meshroom.core import desc
+from meshroom.core.utils import VERBOSE_LEVEL
+# from meshroom.core.plugin import EnvType
 class Map3D(desc.CommandLineNode):
+    # Plugin Infos for the Plugin System
+    # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    # envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
@@ -27,25 +32,14 @@ This node allows to get 3D map of where is the dataset.
             label='GPS coordinates file',
             description='''GPS coordinates file.''',
             value= "",
-            uid=[0],
-        ),
-        desc.ChoiceParam(
-            name='resolution',
-            label='Resolution (meters)',
-            description='''Resolution of the mesh.''',
-            value=25,
-            values=[0.30, 1, 5, 25],
-            exclusive=True,
-            uid=[],
         ),
         desc.ChoiceParam(
             name='verboseLevel',
             label='Verbose Level',
             description='''verbosity level (critical, error, warning, info, debug).''',
             value='info',
-            values=['critical', 'error', 'warning', 'info', 'debug'],
+            values=VERBOSE_LEVEL,
             exclusive=True,
-            uid=[],
         ),
     ]
 
@@ -55,6 +49,5 @@ This node allows to get 3D map of where is the dataset.
             label='Output Folder',
             description='''Output Folder''',
             value=desc.Node.internalFolder,
-            uid=[],
         ),
     ]

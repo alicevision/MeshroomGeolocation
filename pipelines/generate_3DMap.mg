@@ -1,31 +1,30 @@
 {
     "header": {
         "pipelineVersion": "2.2",
-        "releaseVersion": "2021.1.0",
+        "releaseVersion": "2024.1.0-develop",
         "fileVersion": "1.1",
         "template": true,
         "nodesVersions": {
-            "CameraInit": "9.0",
-            "Mesh3D": "1.2",
-            "GetGPSData": "1.2",
-            "Merge": "1.2",
-            "Map3D": "1.2"
+            "CameraInit": "11.0",
+            "GetGPSData": "2.0",
+            "Map3D": "2.0",
+            "Mesh3D": "2.0"
         }
     },
     "graph": {
         "CameraInit_1": {
             "nodeType": "CameraInit",
             "position": [
-                96,
-                -123
+                0,
+                0
             ],
             "inputs": {}
         },
         "GetGPSData_1": {
             "nodeType": "GetGPSData",
             "position": [
-                321,
-                -126
+                200,
+                0
             ],
             "inputs": {
                 "inputFile": "{CameraInit_1.output}"
@@ -34,33 +33,22 @@
         "Map3D_1": {
             "nodeType": "Map3D",
             "position": [
-                535,
-                -125
+                400,
+                0
             ],
             "inputs": {
                 "GPSFile": "{GetGPSData_1.output}"
             }
         },
-        "Merge_1": {
-            "nodeType": "Merge",
+        "Mesh3D_1": {
+            "nodeType": "Mesh3D",
             "position": [
-                742,
-                -129
+                600,
+                0
             ],
             "inputs": {
                 "folder": "{Map3D_1.outputFolder}",
                 "GPSFile": "{Map3D_1.GPSFile}"
-            }
-        },
-        "Mesh3D_1": {
-            "nodeType": "Mesh3D",
-            "position": [
-                939,
-                -129
-            ],
-            "inputs": {
-                "folder": "{Merge_1.outputFolder}",
-                "GPSFile": "{Merge_1.GPSFile}"
             }
         }
     }
