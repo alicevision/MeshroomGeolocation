@@ -7,7 +7,7 @@ from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 # from meshroom.core.plugin import EnvType
 
-class North(desc.CommandLineNode):
+class GeolocationLidarLasToMesh(desc.CommandLineNode):
     # Plugin Infos for the Plugin System
     # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
     # envType = EnvType.VENV
@@ -18,21 +18,42 @@ class North(desc.CommandLineNode):
 
     # Get python environnement or global python
     pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
-    targetScriptPath = (currentFileFolderPath / "../scripts/north.py").resolve()
+    targetScriptPath = (currentFileFolderPath / "../../scripts/lidarLasToMesh.py").resolve()
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
     category = 'Geolocation'
     documentation = '''
-This node allows to get north around dataset.
+This node allows to generate a mesh from .asc and .las LIDAR file.
 '''
 
     inputs = [
         desc.File(
-            name='GPSFile',
-            label='GPS coordinates file',
-            description='''GPS coordinates file.''',
+            name='folder',
+            label='Folder',
+            description='''Folder''',
             value= "",
+        ),
+        desc.File(
+            name='GPSFile',
+            label='GPS Coordinates',
+            description='''GPS coordinates''',
+            value= "",
+        ),
+        desc.ChoiceParam(
+            name='MeshMethod',
+            label='Mesh method',
+            description='''Mesh Method (Voxel, Delaunay Triangulation).''',
+            value='voxel',
+            values=['voxel', 'delaunay'],
+            exclusive=True,
+            ),
+        desc.IntParam(
+            name="dist",
+            label="Distance From Center (m)",
+            description="Distance from center point (m)",
+            value=200,
+            range=(50, 500, 1),
         ),
         desc.ChoiceParam(
             name='verboseLevel',
@@ -46,15 +67,9 @@ This node allows to get north around dataset.
 
     outputs = [
         desc.File(
-            name='outputPath',
-            label='Output',
-            description='''Output''',
-            value=desc.Node.internalFolder + "north.obj",
-        ),
-        desc.File(
-            name='outputFolder',
-            label='Output Folder',
-            description='''Output Folder''',
-            value=desc.Node.internalFolder,
+            name='outputobj',
+            label='OBJ from File',
+            description='''OBJ from File''',
+            value='{nodeCacheFolder}/mesh.obj',
         ),
     ]

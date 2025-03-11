@@ -6,6 +6,7 @@ from pathlib import Path
 from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 # from meshroom.core.plugin import EnvType
+
 class WeatherHDRI(desc.CommandLineNode):
     # Plugin Infos for the Plugin System
     # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
@@ -17,13 +18,13 @@ class WeatherHDRI(desc.CommandLineNode):
 
     # Get python environnement or global python
     pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
-    targetScriptPath = (currentFileFolderPath / "../scripts/weatherHDRI.py").resolve()
+    targetScriptPath = (currentFileFolderPath / "../../scripts/weatherHDRI.py").resolve()
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
     category = 'Geolocation'
     documentation = '''
-This node allows to get an HDRI file according to the weather at moment of dataset.
+This node allows to get an HDRI file according to the weather of the shooting location based on GPS and time.
 '''
 
     inputs = [
@@ -31,13 +32,13 @@ This node allows to get an HDRI file according to the weather at moment of datas
             name='inputFile',
             label='SfMData',
             description='''input SfMData.''',
-            value= "",
+            value='',
         ),
         desc.File(
             name='GPSFile',
             label='GPS coordinates file',
             description='''GPS coordinates file.''',
-            value= "",
+            value='',
         ),
         desc.ChoiceParam(
             name='verboseLevel',
@@ -54,7 +55,7 @@ This node allows to get an HDRI file according to the weather at moment of datas
             name='output',
             label='Hdri result',
             description='hdri from weather folder',
-            value=desc.Node.internalFolder+'hdri.exr',
-            semantic="image",
+            value='{nodeCacheFolder}/hdri.exr',
+            semantic='image',
         ),
     ]

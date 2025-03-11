@@ -1,36 +1,43 @@
 __version__ = "2.0"
 
-from meshroom.core import desc
-from meshroom.core.utils import VERBOSE_LEVEL
 import os
 from pathlib import Path
-class Merge(desc.CommandLineNode):
+
+from meshroom.core import desc
+from meshroom.core.utils import VERBOSE_LEVEL
+# from meshroom.core.plugin import EnvType
+
+class Sun(desc.CommandLineNode):
+    # Plugin Infos for the Plugin System
+    # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
+    # envType = EnvType.VENV
+
     # On Windows, needs to avoid backslash for command line execution (as_posix needed)
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
 
     # Get python environnement or global python
     pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
-    targetScriptPath = (currentFileFolderPath / "../scripts/merge.py").resolve()
+    targetScriptPath = (currentFileFolderPath / "../../scripts/sun.py").resolve()
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
     category = 'Geolocation'
     documentation = '''
-This node allows to merge files to one File.
+This node allows to display sun according to time and gps.
 '''
 
     inputs = [
         desc.File(
-            name='folder',
-            label='Folder',
-            description='''Folder''',
+            name='inputFile',
+            label='SfMData',
+            description='''input SfMData.''',
             value= "",
         ),
         desc.File(
             name='GPSFile',
-            label='GPS File',
-            description='''GPS file''',
+            label='GPS coordinates file',
+            description='''GPS coordinates file.''',
             value= "",
         ),
         desc.ChoiceParam(
@@ -45,9 +52,15 @@ This node allows to merge files to one File.
 
     outputs = [
         desc.File(
+            name='outputPath',
+            label='Output',
+            description='''Output''',
+            value='{nodeCacheFolder}/sun.obj',
+        ),
+        desc.File(
             name='outputFolder',
             label='Output Folder',
-            description='''Output folder.''',
-            value= desc.Node.internalFolder,
+            description='''Output Folder''',
+            value='{nodeCacheFolder}',
         ),
     ]

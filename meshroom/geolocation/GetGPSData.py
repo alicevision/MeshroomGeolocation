@@ -1,13 +1,12 @@
 __version__ = "2.0"
 
-import json
 from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 
 class GetGPSData(desc.Node):
     category = 'Geolocation'
     documentation = '''
-This node allows to get GPS coordinates of a file.
+This node allows to extract GPS coordinates from images from an SfmData file.
 '''
 
     inputs = [
@@ -32,11 +31,12 @@ This node allows to get GPS coordinates of a file.
             name='output',
             label='GPS coordinates',
             description='GPS coordinates from input file',
-            value=desc.Node.internalFolder + "gps.json",
+            value='{nodeCacheFolder}/gps.json',
         ),
     ]
 
     def processChunk(self, chunk):
+        import json
         try:
             chunk.logManager.start(chunk.node.verboseLevel.value)
             chunk.logger.info("GPS")

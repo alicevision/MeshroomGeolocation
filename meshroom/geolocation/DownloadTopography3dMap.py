@@ -6,7 +6,8 @@ from pathlib import Path
 from meshroom.core import desc
 from meshroom.core.utils import VERBOSE_LEVEL
 # from meshroom.core.plugin import EnvType
-class TopographyMap3D(desc.CommandLineNode):
+
+class DownloadTopography3dMap(desc.CommandLineNode):
     # Plugin Infos for the Plugin System
     # envFile = os.path.join(os.path.dirname(__file__), '../requirements.txt')
     # envType = EnvType.VENV
@@ -17,7 +18,7 @@ class TopographyMap3D(desc.CommandLineNode):
 
     # Get python environnement or global python
     pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
-    targetScriptPath = (currentFileFolderPath / "../scripts/DEMto3DFULL.py").resolve()
+    targetScriptPath = (currentFileFolderPath / "../../scripts/DEMto3DFULL.py").resolve()
 
     commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
 
@@ -87,12 +88,12 @@ This node allows to get SRTM Data represented as a mesh of the localisation.
             name='output',
             label='Output',
             description='''Output.''',
-            value= desc.Node.internalFolder + "result.obj",
+            value='{nodeCacheFolder}/topography.obj',
         ),
         desc.File(
             name='outputFolder',
             label='Output Folder',
             description='''Output Folder''',
-            value= desc.Node.internalFolder,
+            value='{nodeCacheFolder}',
         ),
     ]
