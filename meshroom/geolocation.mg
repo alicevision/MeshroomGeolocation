@@ -1,16 +1,16 @@
 {
     "header": {
-        "releaseVersion": "2025.1.0-develop",
+        "releaseVersion": "2025.1.1",
         "fileVersion": "2.0",
         "nodesVersions": {
             "CameraInit": "12.0",
+            "CopyFiles": "1.3",
             "Download2dMap": "2.0",
             "DownloadLidar3dMap": "2.0",
             "DownloadTopography3dMap": "2.0",
             "GeolocationLidarLasToMesh": "2.0",
             "GetGPSData": "2.0",
             "North": "2.0",
-            "Publish": "1.3",
             "Sun": "2.0",
             "WeatherHDRI": "2.0"
         },
@@ -86,8 +86,8 @@
                 "GPSFile": "{GetGPSData_1.output}"
             }
         },
-        "Publish_1": {
-            "nodeType": "Publish",
+        "CopyFiles_1": {
+            "nodeType": "CopyFiles",
             "position": [
                 1176,
                 318
