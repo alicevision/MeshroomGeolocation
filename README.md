@@ -26,7 +26,7 @@ python setup.py
 
 `setup.py` creates a `.venv` inside the plugin folder and installs all required dependencies into it. This isolated environment is used automatically by all plugin nodes — no environment variables need to be set.
 
-> **Note:** Run `setup.py` with a standard Python 3 installation (not Meshroom's bundled Python). Python 3.11 is recommended to match Meshroom's interpreter.
+> **Note:** Run `setup.py` with a standard Python 3 installation (not Meshroom's bundled Python).
 
 ## Environment variables
 Custom nodes can be added to Meshroom by setting the environment variable `MESHROOM_NODES_PATH`.
