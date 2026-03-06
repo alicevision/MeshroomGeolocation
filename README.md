@@ -17,12 +17,16 @@ It is a module for [Meshroom](https://alicevision.org/#meshroom).
 
 You can [download pre-compiled binaries for the latest release](https://github.com/alicevision/meshroom/releases).
 
-Get the source code and install runtime requirements:
+Get the source code and set up the plugin environment:
 ```bash
 git clone --recursive https://github.com/alicevision/MeshroomGeolocation.git
 cd MeshroomGeolocation
-pip install -r requirements.txt
+python setup.py
 ```
+
+`setup.py` creates a `.venv` inside the plugin folder and installs all required dependencies into it. This isolated environment is used automatically by all plugin nodes — no environment variables need to be set.
+
+> **Note:** Run `setup.py` with a standard Python 3 installation (not Meshroom's bundled Python). Python 3.11 is recommended to match Meshroom's interpreter.
 
 ## Environment variables
 Custom nodes can be added to Meshroom by setting the environment variable `MESHROOM_NODES_PATH`.
@@ -36,6 +40,14 @@ Custom pipelines can be added to Meshroom by setting the environment variable `M
 Here `MESHROOM_PIPELINE_TEMPLATES_PATH = path/to/MeshroomGeolocation/pipelines`.
 
 All the pipelines will be available in Pipelines category in Meshroom UI. You can learn more about them [here](#pipelines).
+
+### Optional: override the Python interpreter
+
+By default the plugin uses the `.venv` created by `setup.py`. To use a different Python interpreter, set `MESHROOM_GEOLOC_PYTHON` to its path before launching Meshroom:
+
+```bash
+set MESHROOM_GEOLOC_PYTHON=C:/path/to/python.exe
+```
 
 ## Plugin System
 Since recently a plugin system has been added to Meshroom.
