@@ -16,11 +16,16 @@ class Download2dMap(desc.CommandLineNode):
     currentFilePath = Path(__file__).absolute()
     currentFileFolderPath = currentFilePath.parent
 
-    # Get python environnement or global python
-    pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", "python"))
+    # Resolve venv Python if present, then MESHROOM_GEOLOC_PYTHON, then bare 'python'
+    _plugin_dir = (currentFileFolderPath / "../..").resolve()
+    _venv_python = next(
+        (p for p in [_plugin_dir / ".venv/Scripts/python.exe", _plugin_dir / ".venv/bin/python"] if p.exists()),
+        None
+    )
+    pythonPath = Path(os.environ.get("MESHROOM_GEOLOC_PYTHON", str(_venv_python) if _venv_python else "python"))
     targetScriptPath = (currentFileFolderPath / "../../scripts/download2dMap.py").resolve()
 
-    commandLine = pythonPath.as_posix() +' '+ targetScriptPath.as_posix() +' {allParams}'
+    commandLine = pythonPath.as_posix() +' -E '+ targetScriptPath.as_posix() +' {allParams}'
 
     category = 'Geolocation'
     documentation = '''
