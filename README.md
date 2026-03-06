@@ -86,7 +86,7 @@ Here are screenshots of them :
 
 ![Map 2d pipeline](./external_files/map2d_pipeline.png)
 
-- **Generate Weather H D R I** is also a simple node with an HDRI downloaded for the weather during the dataset.
+- **Generate Weather HDRI** is also a simple node with an HDRI downloaded for the weather during the dataset.
 
 ![Weather pipeline](./external_files/weather_pipeline.png)
 
